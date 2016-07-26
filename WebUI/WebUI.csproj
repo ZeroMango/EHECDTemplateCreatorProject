@@ -463,6 +463,8 @@
     <Content Include="scripts\jquery.easyui-1.4.5.min.js" />
     <Content Include="scripts\jquery.easyui.mobile-1.4.5.js" />
     <Content Include="scripts\jquery.easyui.mobile-1.4.5.min.js" />
+    <Content Include="scripts\lib\main.js" />
+    <Content Include="scripts\lib\page_contrl_base.js" />
     <Content Include="scripts\locale\easyui-lang-af.js" />
     <Content Include="scripts\locale\easyui-lang-am.js" />
     <Content Include="scripts\locale\easyui-lang-ar.js" />
@@ -487,6 +489,7 @@
     <Content Include="scripts\locale\easyui-lang-tr.js" />
     <Content Include="scripts\locale\easyui-lang-zh_CN.js" />
     <Content Include="scripts\locale\easyui-lang-zh_TW.js" />
+    <Content Include="scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
