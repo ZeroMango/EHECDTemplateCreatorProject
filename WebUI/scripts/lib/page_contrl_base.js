@@ -70,7 +70,7 @@ var pagectrl = new function PageControl() {
         /// <param name="formatString" type="String">格式化错误内容</param>             
         /// <returns type="Error">生成的异常信息</returns>
         return new Error(formatString.format(error));
-    }
+    };
 
     var version = {
         //IE内核
@@ -99,6 +99,13 @@ var pagectrl = new function PageControl() {
         weixin: navigator.userAgent.indexOf('MicroMessenger') > -1,
         //是否QQ
         qq: navigator.userAgent.match(/\sQQ/i) == " qq"
+    };
+
+    this.alertIcon = {
+        error: "error",
+        question: "question",
+        info: "info",
+        warning: "warning"
     };
 
     //元素操作
@@ -463,8 +470,6 @@ var pagectrl = new function PageControl() {
                 throw createErrorInfo(errorInfos.element$GetObjectByID$Error, [e.message, "element$GetObjectByID"]);
             }
         };
-
-
     };
 
     //操作方法
@@ -847,16 +852,27 @@ var pagectrl = new function PageControl() {
                 img.src = base64;
             }
         };
+
+        this.alert = function (msg, title, icon, callback) {
+
+            $.messager.alert(title, msg, icon, callback);
+
+            //if (title) {
+            //    if (icon) {
+            //        $.messager.alert(title, msg, icon, callback);
+            //    } else {
+            //        $.messager.alert(title, msg, null, callback);
+            //    }
+            //} else {
+
+            //}
+        };
     };
 };
 
 
-(function () {
-    if (top && top.$ && top.$.messager && top.$.messager.alert) {
-        window.alert = function (msg) {
-            var div = "<div style='word-break: break-all;word-wrap: break-word;'>" + msg + "</div>";
-            top.$.messager.alert('提示', "asdfasdf");
-        };
-    }
-}());
+
+
+
+
 

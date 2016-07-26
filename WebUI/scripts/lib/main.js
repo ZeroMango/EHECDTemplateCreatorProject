@@ -1,7 +1,16 @@
-var main = new function MainCtrl() {
+var main;
+
+$(function () {
+    main = new MainCtrl();
+    main.fuckyou();
+});
 
 
 
-};
+function MainCtrl() { };
 
-alert("fuck you");
+MainCtrl.prototype = MainCtrl = function () {
+    this.fuckyou = function () {
+        pagectrl.fuc.alert("asdfasdfad");
+    };
+}
