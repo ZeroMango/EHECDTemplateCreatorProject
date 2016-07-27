@@ -20,6 +20,19 @@
     <script src="~/scripts/lib/main.js"></script>
 </head>
 <body>
-    
+    <!--布局面板-->
+    <div id="main_layout" class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',title:'说明',split:false,expandMode:'float',collapsible:false" style="height:140px;"></div>
+        <div data-options="region:'south',title:'',split:true,expandMode:'float',collapsible:false" style="height:60px;background-color:darkgrey"></div>
+        <div data-options="region:'east',iconCls:'icon-edit',title:'操作菜单',split:true,expandMode:'float',collapsible:false" style="width:200px;">
+            <div id="dl"></div>
+        </div>
+        <div data-options="region:'west',title:'已有元素',split:true,expandMode:'float',collapsible:false" style="width:200px;"></div>
+        <div data-options="region:'center',title:'实时效果',collapsible:false" style="padding:5px;background:#eee;">
+            
+        </div>
+    </div>
+
+    <div id="operate_dialog"></div>
 </body>
 </html>
