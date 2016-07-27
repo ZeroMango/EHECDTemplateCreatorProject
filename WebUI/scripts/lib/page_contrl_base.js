@@ -120,14 +120,14 @@ var pagectrl = new function PageControl() {
             try {
                 var selectedRows = null;
                 if (typeof selector === "string") {
-                    selectedRow = $("#" + selector.replace("#", "")).datagrid("getSelected");
+                    selectedRows = $("#" + selector.replace("#", "")).datagrid("getSelected");
                 } else {
-                    selectedRows = selector.datagrid("getSelections");
+                    selectedRows = selector.datagrid("getSelected");
                 }
-                if (selectedRows !== null && Array.isArray(selectedRows) && selectedRows.length > 0 && selectedRows.length === 1) {
-                    callBackFuc(selectedRows[0]);
+                if (selectedRows !== null && selectedRows !== undefined) {
+                    callBackFuc(selectedRows);
                 } else {
-                    alert(unSelectRowsMessage);
+                    pagectrl.fuc.alert(unSelectRowsMessage, "请注意", pagectrl.alertIcon.info, null);
                 }
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$checkHasSelectedSingleRow$Error, [e.message, "dependEasyui$checkHasSelectedSingleRow"]);
@@ -472,8 +472,25 @@ var pagectrl = new function PageControl() {
         };
     };
 
-    //操作方法
+
     this.fuc = new function Func() {
+
+        this.uuid = function () {
+            /// <summary>
+            /// 生成uuid
+            /// </summary>
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4";
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
+            s[8] = s[13] = s[18] = s[23] = "-";
+
+            var uuid = s.join("");
+            return uuid;
+        }
 
         this.calculateByExpression = function (expression, precision, isFourHomesFive) {
             /// <summary>根据表达式计算结果，表达式是数字和数字之间的+、-、*、/、%等算法，精度将依照设置的精度返回double值</summary>     
@@ -854,18 +871,11 @@ var pagectrl = new function PageControl() {
         };
 
         this.alert = function (msg, title, icon, callback) {
-
-            $.messager.alert(title, msg, icon, callback);
-
-            //if (title) {
-            //    if (icon) {
-            //        $.messager.alert(title, msg, icon, callback);
-            //    } else {
-            //        $.messager.alert(title, msg, null, callback);
-            //    }
-            //} else {
-
-            //}
+            if (callback) {
+                $.messager.alert(title, msg, icon, callback);
+            } else {
+                $.messager.alert(title, msg, icon);
+            }
         };
     };
 };
