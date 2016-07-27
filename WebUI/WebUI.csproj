@@ -455,6 +455,7 @@
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="Content\themes\material\images\Thumbs.db" />
+    <Content Include="Content\home.css" />
     <None Include="scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="scripts\easyloader.js" />
     <Content Include="scripts\jquery-1.11.3.js" />
@@ -505,6 +506,7 @@
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="scripts\jquery-1.11.3.min.map" />
+    <Content Include="Views\Home\AddDatagrid.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,0 +1,49 @@
+﻿<div id="dt_panel">
+
+    <!--panel的工具配置-->
+    <div id="tt">
+        <a href="#" class="icon-add" onclick="main.operate.createGridColProperty();" title="添加列属性"></a>
+        <a href="#" class="icon-remove" onclick="main.operate.delGridColProperty();" title="移除选中列属性"></a>
+    </div>
+
+    <!--列属性配置的说明-->
+    <h3 style="background-color:darksalmon;color:white;height:25px;">&emsp; datagrid列属性配置</h3>
+
+    <!--列数据表-->
+    <table id="dt_dtgd"></table>
+
+</div>
+<script type="text/javascript">
+
+    $(function () {
+
+        //获取dialog高宽
+        var width = $("#dt_panel").parent().innerWidth() - 10;
+        var height = $("#dt_panel").parent().innerHeight() - 10;
+
+        //初始化panel
+        $("#dt_panel").panel({
+            width: width,
+            height: height,
+            title: '配置datagrid属性',
+            tools: "#tt"
+        });
+
+        //设置panel属性
+        $("#dt_panel").panel("panel").css("margin", "5px");
+
+        //初始化datagrid
+        $('#dt_dtgd').datagrid({
+            singleSelect: true,
+            rownumbers: true,
+            columns: [[
+                { field: 'fieldName', title: '属性名称', width: 100 },
+                { field: 'field', title: '对应字段', width: 100 },
+                { field: 'width', title: '宽度', width: 100 },
+                { field: 'align', title: '对齐方式', width: 100 },
+                { field: 'operate', title: '操作', width: 100 }
+            ]], fitColumns: true
+        });
+    });
+
+</script>

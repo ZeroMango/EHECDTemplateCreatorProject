@@ -14,6 +14,9 @@ namespace WebUI.Controllers
             return View();
         }
 
-
+        public PartialViewResult AddDatagrid()
+        {
+            return PartialView();
+        }
     }
 }

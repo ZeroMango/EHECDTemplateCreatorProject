@@ -1,0 +1,38 @@
+﻿html, body {margin:0px;padding:0px;}
+body{font-size:12px;font-family:微软雅黑,宋体, Arial, Lucida Grande, Tahoma, sans-serif;border-style:none;}
+a:link{text-decoration: none;color:black;}
+a:visited{text-decoration: none;color:black;}
+a:hover{text-decoration:underline;color:#0196e3;}
+a:active{text-decoration: underline;color:#0196e3;}
+
+/*.easyui-accordion1 ul{list-style-type:none;margin:0px; padding:10px;}
+.easyui-accordion1 ul li{ padding:0px;}
+.easyui-accordion1 ul li a{line-height:24px;}
+.easyui-accordion1 ul li div{margin:2px 0px;padding-left:10px;padding-top:2px;}
+.easyui-accordion1 ul li div.hover{border:1px dashed #99BBE8; background:#E0ECFF;cursor:pointer;}
+.easyui-accordion1 ul li div.hover a{color:#416AA3;}
+.easyui-accordion1 ul li div.selected{border:1px solid #99BBE8; background:#E0ECFF;cursor:default;}
+.easyui-accordion1 ul li div.selected a{color:#416AA3; font-weight:bold;}
+.easyui_customNorth{ line-height:40px; background-color:#E6EEF8;}
+.easyui-customSouth{ line-height:18px; background-color:#E6EEF8; text-align:center;}
+.topNav{position:absolute; top:0px; right:0px; line-height:40px;padding-right:10px;}
+.topNav label{ cursor:pointer;}*/
+
+/*.gridstyle {
+	font-size:13px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #e4e4e4;
+	border-collapse: collapse;
+}
+.gridstyle td {
+	border-width: 1px;
+	padding: 6px;
+	border-style: solid;
+	border-color: #e4e4e4;
+	background-color: #ffffff;
+}
+
+.gridstyle td.group{ background-color:#e2e9f3; text-align:left;font-weight:800;}
+.gridstyle td.title{ background-color:#F1F6FF; text-align:right;}
+.gridstyle td.content{ background-color:#FAFCFF;}*/

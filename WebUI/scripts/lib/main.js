@@ -17,6 +17,7 @@ MainCtrl.prototype = MainCtrl = function () {
      * 初始化
      */
     this.init = function () {
+        var that = this;
         try {
 
             //初始化菜单
@@ -26,7 +27,7 @@ MainCtrl.prototype = MainCtrl = function () {
                 checkbox: true,
                 lines: true,
                 onDblClickRow: function (index, row) {
-                    operate.dbclickRow(index, row);
+                    that.operate.dbclickRow(index, row);
                 }
             });
 
@@ -45,14 +46,14 @@ MainCtrl.prototype = MainCtrl = function () {
                 cache: false,
                 modal: true,
                 buttons: [{
-                    text:'添加',
-                    iconCls:'icon-add',
+                    text: '添加',
+                    iconCls: 'icon-add',
                     handler: function () {
 
                     }
-                },{
-                    text:'关闭',
-                    iconCls:'icon-cancel',
+                }, {
+                    text: '关闭',
+                    iconCls: 'icon-cancel',
                     handler: function () {
                         operateDialog.dialog("clear").dialog("close");
                     }
@@ -65,7 +66,7 @@ MainCtrl.prototype = MainCtrl = function () {
     };
 
     //操作对象
-    var operate = {
+    this.operate = {
 
         /**
          * 双击菜单选项时触发
@@ -94,13 +95,43 @@ MainCtrl.prototype = MainCtrl = function () {
             operateDialog.dialog("resize", {
                 width: 1024,
                 height: 768
-            }).dialog("setTitle", "添加datagrid").dialog("open").dialog("center").dialog("refresh","http://www.baidu.com");
+            }).dialog("setTitle", "添加datagrid").dialog("open").dialog("center").dialog("refresh", "/Home/AddDatagrid");
         },
 
         /**
          * 开始创建dialog
          */
         toCTDialog: function () {
+        },
+
+        /**
+         * 创建一个列属性
+         */
+        createGridColProperty: function () {
+            try {
+                $('#dt_dtgd').datagrid("appendRow", {
+                    fieldName: "fieldName",
+                    field: "字段名",
+                    width: "列宽度",
+                    align: "left",
+                    operate: "添加formatter"
+                });
+            } catch (e) {
+                pagectrl.fuc.alert(e.message, "异常", pagectrl.alertIcon.error, null);
+            }
+        },
+
+        /**
+         * 删除一个选中的列属性
+         */
+        delGridColProperty: function () {
+            try {
+                pagectrl.element.dependEasyui$checkHasSelectedSingleRow('#dt_dtgd', function (selectedRow) {
+                    $('#dt_dtgd').datagrid("deleteRow", $('#dt_dtgd').datagrid("getRowIndex", selectedRow));
+                }, "请选中你要删除的列属性");
+            } catch (e) {
+                pagectrl.fuc.alert(e.message, "异常", pagectrl.alertIcon.error, null);
+            }
         }
 
     };
