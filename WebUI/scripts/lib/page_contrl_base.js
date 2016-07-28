@@ -39,7 +39,7 @@ String.prototype.format = function (args) {
  *     该库中所有方法遇到异常将不做处理，但会封装
  *     并抛出
  */
-var pagectrl = new function PageControl() {
+var pagectrl = (function PageControl() {
 
     var errorInfos = {
         dependEasyui$checkHasSelectedSingleRow$Error: "校验datagrid是否有选中行（单行）时出错（方法名称为{1}），错误信息为：{0}",
@@ -108,10 +108,14 @@ var pagectrl = new function PageControl() {
         warning: "warning"
     };
 
-    //元素操作
-    this.element = new function PageElement() {
+    ////new function PageElement() {
 
-        this.dependEasyui$checkHasSelectedSingleRow = function (selector, callBackFuc, unSelectRowsMessage) {
+    /**
+     * 元素操作模块
+     */
+    var element = (function Element() {
+
+        function dependEasyui$checkHasSelectedSingleRow(selector, callBackFuc, unSelectRowsMessage) {
             /// <summary>校验datagrid是否有选中行（单行）</summary>     
             /// <param name="selector" type="String 或者是 jQuery对象">选择器或者是datagrid对象</param>   
             /// <param name="callBackFuc" type="Function">回调的函数</param>   
@@ -132,9 +136,35 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$checkHasSelectedSingleRow$Error, [e.message, "dependEasyui$checkHasSelectedSingleRow"]);
             }
-        };
+        }
 
-        this.dependEasyui$Confirm = function (confirmMessage, callBackFuc, callBackParam) {
+        function dependEasyui$checkHasSelectedRows(selector, callBackFuc, unSelectRowMessage) {
+            /// <summary>
+            /// 校验datagrid是否有选中行(多行)
+            /// </summary>
+            /// <param name="selector" type="String 或者是 jQuery对象">选择描述符或者是datagrid对象</param>
+            /// <param name="callBackFuc" type="Function">回调的函数</param>
+            /// <param name="unSelectRowMessage" type="String">未选中时的提示信息</param>
+            /// <returns type="void"></returns>
+            try {
+                var selectedRow = null;
+
+                if (typeof selector === "string") {
+                    selectedRow = $("#" + selector.replace("#", "")).datagrid("getSelected");
+                } else {
+                    selectedRow = selector.datagrid("getSelected");
+                }
+                if (selectedRow !== null) {
+                    callBackFuc(selectedRow);
+                } else {
+                    alert(unSelectRowMessage);
+                }
+            } catch (e) {
+                throw createErrorInfo(errorInfos.dependEasyui$checkHasSelectedRows$Error, [e.message, "dependEasyui$checkHasSelectedRows"]);
+            }
+        }
+
+        function dependEasyui$Confirm(confirmMessage, callBackFuc, callBackParam) {
             /// <summary>提示确认框</summary>   
             /// <param name="confirmMessage" type="String">操作时的提示内容</param>  
             /// <param name="callBackFuc" type="Function">回调的函数</param>
@@ -155,9 +185,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$Confirm$Error, [e.message, "dependEasyui$Confirm"]);
             }
-        };
+        }
 
-        this.dependEasyui$confirmHasSelectedRows = function (selector, callBackFuc, confirmMessage, unSelectRowMessage, formatConfirmMSGCallBack) {
+        function dependEasyui$confirmHasSelectedRows(selector, callBackFuc, confirmMessage, unSelectRowMessage, formatConfirmMSGCallBack) {
             /// <summary>校验datagrid是否有选中行（多行带确认框）</summary>     
             /// <param name="selector" type="String 或者是 jQuery对象">选择器或者是datagrid对象</param>   
             /// <param name="callBackFuc" type="Function">确认的回调函数</param> 
@@ -189,35 +219,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$confirmHasSelectedRows$Error, [e.message, "dependEasyui$confirmHasSelectedRows"]);
             }
-        };
+        }
 
-        this.dependEasyui$checkHasSelectedRows = function (selector, callBackFuc, unSelectRowMessage) {
-            /// <summary>
-            /// 校验datagrid是否有选中行(多行)
-            /// </summary>
-            /// <param name="selector" type="String 或者是 jQuery对象">选择描述符或者是datagrid对象</param>
-            /// <param name="callBackFuc" type="Function">回调的函数</param>
-            /// <param name="unSelectRowMessage" type="String">未选中时的提示信息</param>
-            /// <returns type="void"></returns>
-            try {
-                var selectedRow = null;
-
-                if (typeof selector === "string") {
-                    selectedRow = $("#" + selector.replace("#", "")).datagrid("getSelected");
-                } else {
-                    selectedRow = selector.datagrid("getSelected");
-                }
-                if (selectedRow !== null) {
-                    callBackFuc(selectedRow);
-                } else {
-                    alert(unSelectRowMessage);
-                }
-            } catch (e) {
-                throw createErrorInfo(errorInfos.dependEasyui$checkHasSelectedRows$Error, [e.message, "dependEasyui$checkHasSelectedRows"]);
-            }
-        };
-
-        this.dependEasyui$PagerBind = function (datagrid, fn) {
+        function dependEasyui$PagerBind(datagrid, fn) {
             /// <summary>datagrid绑定方法</summary>     
             /// <param name="datagrid" type="datagrid对象">DataGrid</param>   
             /// <param name="fn" type="String">执行的绑定方法的名称</param>
@@ -242,9 +246,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$PagerBind$Error, [e.message, "dependEasyui$PagerBind"]);
             }
-        };
+        }
 
-        this.dependEasyui$LoadDatagridData = function (datagrid, data) {
+        function dependEasyui$LoadDatagridData(datagrid, data) {
             /// <summary>easyui Datagrid载入数据</summary>     
             /// <param name="datagrid" type="datagrid对象">datagrid对象</param> 
             /// <param name="data" type="Json[]">json对象数组</param>
@@ -258,9 +262,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$LoadDatagridData$Error, [e.message, "dependEasyui$LoadDatagridData"]);
             }
-        };
+        }
 
-        this.dependEasyui$GetDatagridData = function (datagrid) {
+        function dependEasyui$GetDatagridData(datagrid) {
             /// <summary>
             /// 获取easyui Datagrid 数据
             /// </summary>
@@ -271,9 +275,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$GetDatagridData$Error, [e.message, "dependEasyui$GetDatagridData"]);
             }
-        };
+        }
 
-        this.dependEasyui$TextBox$SetText = function (selector, text) {
+        function dependEasyui$TextBox$SetText(selector, text) {
             /// <summary>设置easyui textbox控件文本</summary>     
             /// <param name="selector" type="String或者是jquery对象">选择器，如#id,或者是jquery对象</param>   
             /// <param name="text" type="String">设置的内容</param>            
@@ -287,9 +291,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$TextBox$SetText$Error, [e.message, "dependEasyui$TextBox$SetText"]);
             }
-        };
+        }
 
-        this.dependEasyui$TextBox$GetText = function (selector) {
+        function dependEasyui$TextBox$GetText(selector) {
             /// <summary>获取easyui textbox控件文本</summary>     
             /// <param name="selector" type="String或者是jquery对象">选择器，如#id，或者是jquery对象</param> 
             /// <returns type="String"></returns>
@@ -302,9 +306,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$TextBox$GetText$Error, [e.message, "dependEasyui$TextBox$GetText"]);
             }
-        };
+        }
 
-        this.dependEasyui$GetObjectByForm = function (easyuiform) {
+        function dependEasyui$GetObjectByForm(easyuiform) {
             /// <summary>
             ///     获取form里面的easyui输入框
             ///     （textbox、numberbox、combotree、combobox）
@@ -337,9 +341,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$GetObjectByForm$Error, [e.message, "dependEasyui$GetObjectByForm"]);
             }
-        };
+        }
 
-        this.dependEasyui$SetInputVlue = function (container, model) {
+        function dependEasyui$SetInputVlue(container, model) {
             /// <summary>
             /// 设置container里面的easyui输入框（textbox和numberbox）的值
             ///     请注意由于字段的key是取的网页元素的data-name元素，因此请注意要给元素加上data-name属性
@@ -366,9 +370,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$SetInputVlue$Error, [e.message, "dependEasyui$SetInputVlue"]);
             }
-        };
+        }
 
-        this.dependEasyui$ResetElementValue = function (container) {
+        function dependEasyui$ResetElementValue(container) {
             /// <summary>
             /// 重置container里面的easyui输入框（textbox和numberbox）的值
             /// </summary>
@@ -383,9 +387,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$ResetElementValue$Error, [e.message, "dependEasyui$ResetElementValue"]);
             }
-        };
+        }
 
-        this.dependEasyui$GetDatagridPager = function (datagrid) {
+        function dependEasyui$GetDatagridPager(datagrid) {
             /// <summary>获取easyui DatagridPager对象</summary>     
             /// <param name="datagrid" type="datagrid对象">datagrid对象</param>            
             /// <returns type="pager对象"></returns>
@@ -394,9 +398,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$GetDatagridPager$Error, [e.message, "dependEasyui$GetDatagridPager"]);
             }
-        };
+        }
 
-        this.dependEasyui$SearchGridData = function (grid, isSelected) {
+        function dependEasyui$SearchGridData(grid, isSelected) {
             /// <summary>查询datagrid数据</summary>     
             /// <param name="grid" type="Object">grid对象</param>
             /// <param name="isSelected" type="Boolean">是否选中grid行</param>
@@ -411,9 +415,9 @@ var pagectrl = new function PageControl() {
             } finally {
                 getPager = null;
             }
-        };
+        }
 
-        this.element$GetJQueryObject = function (selector) {
+        function element$GetJQueryObject(selector) {
             /// <summary>
             /// 获取指定选择表达式的页面元素jquery对象
             /// </summary>
@@ -447,9 +451,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.element$GetJQueryObject$Error, [e.message, "element$GetJQueryObject"]);
             }
-        };
+        }
 
-        this.element$GetObjectByClass = function (css) {
+        function element$GetObjectByCss(css) {
             /// <summary>根据class名称获取jquery对象</summary>
             /// <param name="css" type="String">Class名称，不用带.号</param>
             /// <returns type="jquery对象或者jquery对象数组"></returns>
@@ -458,9 +462,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.element$GetJQueryObject$Error, [e.message, "element$GetObjectByClass"]);
             }
-        };
+        }
 
-        this.element$GetObjectByID = function (id) {
+        function element$GetObjectByID(id) {
             /// <summary>根据ID名称获取jquery对象</summary>
             /// <param name="id" type="String">ID名称，不用带#号</param>
             /// <returns type="jquery对象"></returns>
@@ -469,13 +473,35 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo(errorInfos.element$GetObjectByID$Error, [e.message, "element$GetObjectByID"]);
             }
+        }
+
+        return {
+            dependEasyui$checkHasSelectedSingleRow: dependEasyui$checkHasSelectedSingleRow,
+            dependEasyui$checkHasSelectedRows: dependEasyui$checkHasSelectedRows,
+            dependEasyui$Confirm: dependEasyui$Confirm,
+            dependEasyui$confirmHasSelectedRows: dependEasyui$confirmHasSelectedRows,
+            dependEasyui$PagerBind: dependEasyui$PagerBind,
+            dependEasyui$LoadDatagridData: dependEasyui$LoadDatagridData,
+            dependEasyui$GetDatagridData: dependEasyui$GetDatagridData,
+            dependEasyui$TextBox$SetText: dependEasyui$TextBox$SetText,
+            dependEasyui$TextBox$GetText: dependEasyui$TextBox$GetText,
+            dependEasyui$GetObjectByForm: dependEasyui$GetObjectByForm,
+            dependEasyui$SetInputVlue: dependEasyui$SetInputVlue,
+            dependEasyui$ResetElementValue: dependEasyui$ResetElementValue,
+            dependEasyui$GetDatagridPager: dependEasyui$GetDatagridPager,
+            dependEasyui$SearchGridData: dependEasyui$SearchGridData,
+            element$GetJQueryObject: element$GetJQueryObject,
+            element$GetObjectByCss: element$GetObjectByCss,
+            element$GetObjectByID: element$GetObjectByID
         };
-    };
+    })();
 
+    /**
+     * 公用方法模块    
+     */
+    var func = (function Func() {
 
-    this.fuc = new function Func() {
-
-        this.uuid = function () {
+        function uuid() {
             /// <summary>
             /// 生成uuid
             /// </summary>
@@ -492,7 +518,7 @@ var pagectrl = new function PageControl() {
             return uuid;
         }
 
-        this.calculateByExpression = function (expression, precision, isFourHomesFive) {
+        function calculateByExpression(expression, precision, isFourHomesFive) {
             /// <summary>根据表达式计算结果，表达式是数字和数字之间的+、-、*、/、%等算法，精度将依照设置的精度返回double值</summary>     
             /// <param name="expression" type="String">计算表达式</param>        
             /// <param name="precision" type="Number">计算的精度值，如果使用时不输入，默认精度就为2</param>      
@@ -508,9 +534,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo("对{0}进行解析计算出错，错误原因是：{1}", [expression, e.message]);
             }
-        };
+        }
 
-        this.numberFormat = function (number, precision) {
+        function numberFormat(number, precision) {
             /// <summary>格式化小数至指定精度，返回的值是String。</summary>
             /// <param name="number" type="Number">要格式化的数字</param>
             /// <param name="precision" type="Number">精度到多少位</param>
@@ -536,30 +562,30 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw createErrorInfo("执行格式化小数精度出错，错误原因是：{0}", [e.message]);
             }
-        };
+        }
 
-        this.definededAndNotNull = function (value) {
+        function definededAndNotNull(value) {
             /// <summary>校验对象不为undefined和空</summary>     
             /// <param name="value" type="Object">要判断的对象</param>             
             /// <returns type="Boolean"></returns>
             return typeof value !== 'undefined' && value !== null;
-        };
+        }
 
-        this.isNumber = function (value) {
+        function isNumber(value) {
             /// <summary>判断对象是否是数字</summary>     
             /// <param name="value" type="Object">要判断的对象</param>             
             /// <returns type="Boolean">判断结果</returns>
             return typeof value === 'number';
-        };
+        }
 
-        this.isDate = function (value) {
+        function isDate(value) {
             /// <summary>判断对象是否是日期对象</summary>     
             /// <param name="value" type="Object">要判断的对象</param>             
             /// <returns type="Boolean">判断结果</returns>
             return toString.call(value) === '[object Date]';
-        };
+        }
 
-        this.isArray = function (value) {
+        function isArray(value) {
             /// <summary>判断对象是否是数组</summary>     
             /// <param name="value" type="Object">要判断的对象</param>             
             /// <returns type="Boolean"></returns>
@@ -568,9 +594,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 return false;
             }
-        };
+        }
 
-        this.isHasValuesArray = function (value) {
+        function isHasValuesArray(value) {
             /// <summary>判断对象是否是含有值得数组</summary>     
             /// <param name="value" type="Object">要判断的对象</param>             
             /// <returns type="Boolean"></returns>
@@ -583,9 +609,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 return false;
             }
-        };
+        }
 
-        this.pushStateToHistroy = function (state) {
+        function pushStateToHistroy(state) {
             /// <summary>pushState创建历史记录</summary>     
             /// <param name="value" type="Object">state对象，至少包含title和url属性。url不能跨域</param>             
             /// <returns type="Boolean">执行结果</returns>
@@ -600,9 +626,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 return false;
             }
-        };
+        }
 
-        this.isDecimal = function (num) {
+        function isDecimal(num) {
             /// <summary>判断一个数是否是小数(字符)</summary>     
             /// <param name="value" type="number">要判断的内容</param>             
             /// <returns type="Boolean"></returns>   
@@ -620,30 +646,30 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 return false;
             }
-        };
+        }
 
-        this.isString = function (val) {
+        function isString(val) {
             /// <summary>判断对象是否是字符串</summary>     
             /// <param name="val" type="Object">要判断的对象</param>             
             /// <returns type="Boolean">判断结果</returns>
             return typeof val === 'string';
-        };
+        }
 
-        this.isFunction = function (val) {
+        function isFunction(val) {
             /// <summary>判断对象是否是函数</summary>     
             /// <param name="val" type="Object">要判断的对象</param>             
             /// <returns type="Boolean">判断结果</returns>
             return typeof val === 'function';
-        };
+        }
 
-        this.isFile = function (obj) {
+        function isFile(obj) {
             /// <summary>判断对象是否是文件</summary>     
             /// <param name="val" type="Object">要判断的对象</param>             
             /// <returns type="Boolean">判断结果</returns>
             return toString.call(obj) === '[object File]';
-        };
+        }
 
-        this.fromJson = function (json) {
+        function fromJson(json) {
             /// <summary>从json转换成对象。依赖json2.js</summary>     
             /// <param name="val" type="Object或者字符串">要转换的对象或者字符串</param>                
             /// <returns type="Json对象"></returns>
@@ -652,9 +678,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 return null;
             }
-        };
+        }
 
-        this.isMobilePhone = function (val) {
+        function isMobilePhone(val) {
             /// <summary>
             /// 判断是否是手机电话
             /// </summary>
@@ -664,9 +690,9 @@ var pagectrl = new function PageControl() {
             if (patrn.exec(val))
                 return true;
             return false;
-        };
+        }
 
-        this.isWebAddress = function (val) {
+        function isWebAddress(val) {
             /// <summary>
             /// 是否是网址
             /// </summary>
@@ -677,9 +703,9 @@ var pagectrl = new function PageControl() {
             if (patrn.exec(val))
                 return true;
             return false;
-        };
+        }
 
-        this.isPhone = function (val) {
+        function isPhone(val) {
             /// <summary>判断对象是否是电话号码</summary>     
             /// <param name="val" type="Object">要判断的对象</param>             
             /// <returns type="Boolean">判断结果</returns>
@@ -690,9 +716,9 @@ var pagectrl = new function PageControl() {
             if (patrn.exec(val))
                 return true;
             return false;
-        };
+        }
 
-        this.timeCompare = function (startTimeString, endTimeString) {
+        function timeCompare(startTimeString, endTimeString) {
             /// <summary>比较两个时间的大小</summary>     
             /// <param name="startTimeString" type="String">开始时间</param>             
             /// <param name="endTimeString" type="String">结束时间</param>
@@ -702,9 +728,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 return false;
             }
-        };
+        }
 
-        this.createStringSplitByCommaFromArray = function (rows, fieldName) {
+        function createStringSplitByCommaFromArray(rows, fieldName) {
             /// <summary>传进一个数据对象集合，根据指定的字段名称，将对应的值取出，以逗号分隔，每个字段以单引号引用，返回一个组合好的字符串</summary>     
             /// <param name="rows" type="Object[]">数据对象的集合</param>
             /// <param name="fieldName" type="String">要取出的字段名称</param>    
@@ -719,9 +745,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw e;
             }
-        };
+        }
 
-        this.formatJsonDate = function (jsondate, format) {
+        function formatJsonDate(jsondate, format) {
             /// <summary>
             ///     格式化时间
             /// </summary>     
@@ -740,9 +766,9 @@ var pagectrl = new function PageControl() {
             var datetime = new Date(parseInt(jsondate, 10));
             if (!format) format = "yyyy-MM-dd";
             return datetime.Format(format);
-        };
+        }
 
-        this.randomBy = function (under, over) {
+        function randomBy(under, over) {
             /// <summary>
             ///     选取范围内的随机数，如果只输入一个参数，就是0-输入的参数之间的随机数
             /// </summary>     
@@ -754,9 +780,9 @@ var pagectrl = new function PageControl() {
                 case 2: return parseInt(Math.random() * (over - under + 1) + under);
                 default: return 0;
             }
-        };
+        }
 
-        this.templateHelper = function (template, filterName, callBack) {
+        function templateHelper(template, filterName, callBack) {
             /// <summary>template辅助方法,用于格式化指定的过滤器。</summary>
             /// <param name="template" type="Object">template模板对象</param>
             /// <param name="filterName" type="String">过滤器名称</param>
@@ -767,9 +793,9 @@ var pagectrl = new function PageControl() {
             } catch (e) {
                 throw e;
             }
-        };
+        }
 
-        this.getClientType = function () {
+        function getClientType() {
             /// <summary>
             /// 获取客户端类型：3.安卓 4.IOS 2.微信
             /// </summary>
@@ -780,7 +806,7 @@ var pagectrl = new function PageControl() {
             if (version.iPhone === true) clientType = 4;
             if (version.weixin === true) clientType = 2;
             return clientType;
-        };
+        }
 
         /*
         * file转base编码，并压缩file
@@ -791,7 +817,7 @@ var pagectrl = new function PageControl() {
                 });
             });
         */
-        this.FileToBase64 = function (file, fn) {
+        function FileToBase64(file, fn) {
             //利用html5转base64
             if ("FileReader" in window) {
                 var reader = new FileReader();
@@ -803,7 +829,7 @@ var pagectrl = new function PageControl() {
                 //将文件读取为DataURL
                 reader.readAsDataURL(file);
             }
-        };
+        }
 
         /*
         * base64图像压缩
@@ -816,7 +842,7 @@ var pagectrl = new function PageControl() {
             
             });
         */
-        this.AutoResizeImage = function (base64, maxWidth, maxHeight, fn) {
+        function AutoResizeImage(base64, maxWidth, maxHeight, fn) {
             //开始压缩图片
             var img = new Image();
             img.crossOrigin = "Anonymous";
@@ -868,21 +894,60 @@ var pagectrl = new function PageControl() {
                 img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
                 img.src = base64;
             }
-        };
+        }
 
-        this.alert = function (msg, title, icon, callback) {
+        function alert(msg, title, icon, callback) {
+            /// <summary>
+            /// 弹出easy的message
+            /// </summary>
+            /// <param name="msg" type="String">消息内容</param>
+            /// <param name="title" type="String">消息框标题</param>
+            /// <param name="icon" type="String">icon</param>
+            /// <param name="callback" type="Function">点击确定后的回调</param>
             if (callback) {
                 $.messager.alert(title, msg, icon, callback);
             } else {
                 $.messager.alert(title, msg, icon);
             }
+        }
+
+        return {
+            uuid: uuid,
+            calculateByExpression: calculateByExpression,
+            numberFormat: numberFormat,
+            definededAndNotNull: definededAndNotNull,
+            isNumber: isNumber,
+            isDate: isDate,
+            isArray: isArray,
+            isHasValuesArray: isHasValuesArray,
+            pushStateToHistroy: pushStateToHistroy,
+            isDecimal: isDecimal,
+            isString: isString,
+            isFunction: isFunction,
+            isFile: isFile,
+            fromJson: fromJson,
+            isMobilePhone: isMobilePhone,
+            isWebAddress: isWebAddress,
+            isPhone: isPhone,
+            timeCompare: timeCompare,
+            createStringSplitByCommaFromArray: createStringSplitByCommaFromArray,
+            formatJsonDate: formatJsonDate,
+            randomBy: randomBy,
+            templateHelper: templateHelper,
+            getClientType: getClientType,
+            FileToBase64: FileToBase64,
+            AutoResizeImage: AutoResizeImage,
+            alert: alert
         };
+    })();
+
+    return {
+        //元素操作模块
+        element: element,
+        //公用方法模块
+        func: func
     };
-};
-
-
-
-
+})();
 
 
 
