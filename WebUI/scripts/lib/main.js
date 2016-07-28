@@ -25,7 +25,7 @@ function MainCtrl() {
                 checkbox: true,
                 lines: true,
                 onDblClickRow: function (index, row) {
-                    operate.dbclickRow(index, row);
+                    dataListOperate.dbclickRow(index, row);
                 }
             });
 
@@ -76,8 +76,10 @@ function MainCtrl() {
         }
     };
 
-    //操作模块
-    var operate = (function Operate() {
+    /**
+     * 数据列表操作模块
+     */
+    var dataListOperate = (function DataListOperate() {
         /**
         * 双击菜单选项时触发
         * @param {type} index 当前选中的选项下标
@@ -86,11 +88,11 @@ function MainCtrl() {
         function dbclickRow(index, row) {
             switch (row.value) {
                 case "dt":
-                    this.toCTDatagrid();
+                    toCTDatagrid();
                     break;
 
                 case "dia":
-                    this.toCTDialog();
+                    toCTDialog();
                     break;
 
                 default:
@@ -119,6 +121,134 @@ function MainCtrl() {
                 height: 400
             }).dialog("setTitle", "添加dialog").dialog("open").dialog("center");
         }
+
+        return {
+            dbclickRow: dbclickRow
+        };
+    })();
+
+    /**
+     * 查询条件操作模块
+     */
+    var conditionOperate = (function ConditionOperate() {
+
+        var conditionID = "#dt_dttlgd";
+
+        /**
+         * 创建查询条件
+         */
+        function createCondition() {
+            try {
+                $(conditionID).datagrid("appendRow", {
+                    conditionDes: "查询条件描述",
+                    fieldName: "字段名",
+                    controlType: "textbox",
+                    options: ""
+                });
+            } catch (e) {
+                pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
+            }
+        }
+
+        /**
+         * 移除查询条件
+         */
+        function delCondition() {
+            try {
+                pagectrl.element.dependEasyui$checkHasSelectedSingleRow(conditionID, function (selectedRow) {
+                    $(conditionID).datagrid("deleteRow", $(conditionID).datagrid("getRowIndex", selectedRow));
+                }, "请选中你要删除的查询条件");
+            } catch (e) {
+                pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
+            }
+        }
+
+        /**
+         * 编辑查询条件
+         */
+        function editCondition() {
+            try {
+                pagectrl.element.dependEasyui$checkHasSelectedSingleRow(conditionID, function (selectedRow) {
+                    $(conditionID).datagrid("beginEdit", $(conditionID).datagrid("getRowIndex", selectedRow));
+                }, "请选中你要编辑的查询条件");
+            } catch (e) {
+                pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
+            }
+        }
+
+        /**
+         * 保存查询条件编辑结果
+         */
+        function endEditCondition() {
+            try {
+                if (operateDialog.find("div #dt_panel2 form").form("validate")) {
+                    $.each($(conditionID).datagrid("getRows"), function (index, value) {
+                        $(conditionID).datagrid("endEdit", index);
+                    });
+                }
+            } catch (e) {
+                pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
+            }
+        }
+
+        /**
+         * 打开属性编辑窗口
+         */
+        function openConditionPropertyDialog() {
+            try {
+                pagectrl.element.dependEasyui$checkHasSelectedSingleRow(conditionID, function (selectedRow) {
+                    var div = $("<div/>");
+                    div.css("padding", "5px");
+                    div.dialog({
+                        title: "编辑控件属性",
+                        width: 400,
+                        height: 600,                        
+                        buttons: [{
+                            text: '确定',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                "use strict";                                
+                                //获取选中行的行下标
+                                let rowIndex = $(conditionID).datagrid("getRowIndex", selectedRow);
+                                //更新行数据
+                                $(conditionID).datagrid("updateRow", {
+                                    index: rowIndex,
+                                    row: { options: "fuck you all!" }
+                                });
+                                //关闭窗口
+                                div.dialog("close");                               
+                            }
+                        }, {
+                            text: '关闭',
+                            iconCls: 'icon-cancel',
+                            handler: function () {
+                                //关闭窗口
+                                div.dialog("close");
+                            }
+                        }],
+                        onClose: function () {
+                            //关闭时摧毁该窗口
+                            div.dialog("destroy");
+                        }
+                    }).dialog("open").dialog("refresh", "/Home/EditConditionOptions?type={0}".format([selectedRow.controlType]));
+
+                }, "你为啥子不选你要添加属性的查询条件喃？瓜的嗦？");
+            } catch (e) {
+                pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
+            }
+        }
+
+        return {
+            createCondition: createCondition,
+            delCondition: delCondition,
+            editCondition: editCondition,
+            endEditCondition: endEditCondition,
+            openConditionPropertyDialog: openConditionPropertyDialog
+        };
+    })();
+
+    //列属性操作模块
+    var columnOperate = (function ColumnOperate() {
 
         /**
          * 创建一个列属性
@@ -168,7 +298,7 @@ function MainCtrl() {
          */
         function endEditGridColProperty() {
             try {
-                if (operateDialog.find("form").form("validate")) {
+                if (operateDialog.find("div #dt_panel form").form("validate")) {
                     $.each($('#dt_dtgd').datagrid("getRows"), function (index, value) {
                         $('#dt_dtgd').datagrid("endEdit", index);
                     });
@@ -210,18 +340,14 @@ function MainCtrl() {
 
                                 if (formatterString && formatterString.length > 0) {
                                     //获取选中行的行数据
-                                    let rowData = $("#dt_dtgd").datagrid("getSelected");
-                                    //获取对应的操作按钮的id
-                                    let btnid = $(rowData.operate).attr("id");
+                                    let rowData = $("#dt_dtgd").datagrid("getSelected");                                    
                                     //获取选中行的行下标
                                     let rowIndex = $("#dt_dtgd").datagrid("getRowIndex", rowData);
                                     //更新行数据
                                     $("#dt_dtgd").datagrid("updateRow", {
                                         index: rowIndex,
                                         row: { formatter: formatterString }
-                                    });
-                                    //重新初始化操作按钮，不然样式要丢失
-                                    $('#' + btnid).linkbutton({ iconCls: 'icon-add', height: 20 });
+                                    });                                    
                                     //关闭窗口
                                     div.dialog("close");
                                 } else {
@@ -252,9 +378,6 @@ function MainCtrl() {
         }
 
         return {
-            dbclickRow: dbclickRow,
-            toCTDatagrid: toCTDatagrid,
-            toCTDialog: toCTDialog,
             createGridColProperty: createGridColProperty,
             delGridColProperty: delGridColProperty,
             editGridColProperty: editGridColProperty,
@@ -277,13 +400,13 @@ function MainCtrl() {
         //初始化列属性panel
         $("#dt_panel").panel({
             width: width,
-            height: height,
+            height: height - 30,
             title: '配置datagrid属性',
             tools: "#tt"
         });
 
         //配置标题
-        $("#dt_panel i").width(width - 1);
+        $("#dt_panel i").width(width - 2);
 
         //设置列属性panel属性
         $("#dt_panel").panel("panel").css("margin", "5px");
@@ -293,7 +416,7 @@ function MainCtrl() {
             singleSelect: true,
             rownumbers: true,
             width: width - 13,
-            height: height - 90,
+            height: height - 95,
             columns: [[
                 { field: 'columnName', halign: "center", title: '列名', width: 100, editor: { type: "textbox", options: { required: true } } },
                 { field: 'field', halign: "center", title: '对应字段', width: 100, editor: { type: "textbox", options: { required: true } } },
@@ -334,7 +457,7 @@ function MainCtrl() {
         //初始化操作菜单条件panel
         $("#dt_panel2").panel({
             width: width,
-            height: height /2 ,
+            height: height / 2 + 15,
             title: '配置datagrid操作菜单条件',
             tools: "#tt2"
         });
@@ -350,33 +473,47 @@ function MainCtrl() {
             singleSelect: true,
             rownumbers: true,
             width: width - 13,
-            height: height /2 - 90,
+            height: height / 2 - 50,
             columns: [[
-                { field: 'columnName', halign: "center", title: '列名', width: 100, editor: { type: "textbox", options: { required: true } } },
-                { field: 'field', halign: "center", title: '对应字段', width: 100, editor: { type: "textbox", options: { required: true } } },
-                { field: 'width', halign: "center", title: '宽度', width: 100, editor: { type: "numberbox", options: { required: true } } },
+                { field: 'conditionDes', halign: "center", title: '条件描述', width: 100, editor: { type: "textbox", options: { required: true } } },
+                { field: 'fieldName', halign: "center", title: '字段名称', width: 100, editor: { type: "textbox", options: { required: true } } },
                 {
-                    field: 'align', halign: "center", title: '对齐方式', width: 100, editor: {
+                    field: 'controlType', halign: "center", title: '控件类型', width: 100, editor: {
                         type: "combobox", options: {
                             required: true,
                             valueField: 'id',
                             textField: 'text',
                             editable: false,
                             data: [{
-                                "id": "center",
-                                "text": "center",
+                                "id": "textbox",
+                                "text": "textbox",
                                 "selected": true
                             }, {
-                                "id": "left",
-                                "text": "left"
+                                "id": "combo",
+                                "text": "combo"
                             }, {
-                                "id": "right",
-                                "text": "right"
+                                "id": "combobox",
+                                "text": "combobox"
+                            }, {
+                                "id": "combotree",
+                                "text": "combotree"
+                            }, {
+                                "id": "combogrid",
+                                "text": "combogrid"
+                            }, {
+                                "id": "datebox",
+                                "text": "datebox"
+                            }, {
+                                "id": "datetimebox",
+                                "text": "datetimebox"
+                            }, {
+                                "id": "calendar",
+                                "text": "calendar"
                             }]
                         }
                     }
                 },
-                { field: 'formatter', halign: "center", align: "left", title: 'formatter', width: 180 }
+                { field: 'options', halign: "left", align: "left", title: '属性', width: 180 }
             ]], fitColumns: true,
             onDblClickRow: function (index, row) {
                 //双击行开始编辑
@@ -391,7 +528,7 @@ function MainCtrl() {
         //初始化操作菜单操作panel
         $("#dt_panel3").panel({
             width: width,
-            height: height / 2,
+            height: height / 2 + 15,
             title: '配置datagrid操作菜单操作',
             tools: "#tt3"
         });
@@ -407,48 +544,79 @@ function MainCtrl() {
             singleSelect: true,
             rownumbers: true,
             width: width - 13,
-            height: height / 2 - 90,
+            height: height / 2 - 50,
             columns: [[
-                { field: 'columnName', halign: "center", title: '列名', width: 100, editor: { type: "textbox", options: { required: true } } },
-                { field: 'field', halign: "center", title: '对应字段', width: 100, editor: { type: "textbox", options: { required: true } } },
-                { field: 'width', halign: "center", title: '宽度', width: 100, editor: { type: "numberbox", options: { required: true } } },
+                { field: 'operateDes', halign: "center", title: '操作描述', width: 100, editor: { type: "textbox", options: { required: true } } },
+                { field: 'operateIcon', halign: "center", title: '对应字段', width: 100, editor: { type: "textbox", options: { required: true } } },
                 {
-                    field: 'align', halign: "center", title: '对齐方式', width: 100, editor: {
+                    field: 'operateIcon', halign: "center", title: '按钮图标', width: 100, editor: {
                         type: "combobox", options: {
                             required: true,
                             valueField: 'id',
                             textField: 'text',
                             editable: false,
                             data: [{
-                                "id": "center",
-                                "text": "center",
+                                "id": "icon-add",
+                                "text": "icon-add",
                                 "selected": true
                             }, {
-                                "id": "left",
-                                "text": "left"
+                                "id": "icon-edit",
+                                "text": "icon-edit"
                             }, {
-                                "id": "right",
-                                "text": "right"
+                                "id": "icon-clear",
+                                "text": "icon-clear"
+                            }, {
+                                "id": "icon-remove",
+                                "text": "icon-remove"
+                            }, {
+                                "id": "icon-save",
+                                "text": "icon-save"
+                            }, {
+                                "id": "icon-cut",
+                                "text": "icon-cut"
+                            }, {
+                                "id": "icon-ok",
+                                "text": "icon-ok"
+                            }, {
+                                "id": "icon-no",
+                                "text": "icon-no"
+                            }, {
+                                "id": "icon-cancel",
+                                "text": "icon-cancel"
+                            }, {
+                                "id": "icon-reload",
+                                "text": "icon-reload"
+                            }, {
+                                "id": "icon-search",
+                                "text": "icon-search"
+                            }, {
+                                "id": "icon-print",
+                                "text": "icon-print"
+                            }, {
+                                "id": "icon-help",
+                                "text": "icon-help"
                             }]
                         }
                     }
                 },
-                { field: 'formatter', halign: "center", align: "left", title: 'formatter', width: 180 }
+                { field: 'operateEvent', halign: "center", align: "left", title: '点击事件', width: 180 }
             ]], fitColumns: true,
             onDblClickRow: function (index, row) {
                 //双击行开始编辑
                 $(this).datagrid("beginEdit", index);
             }
         });
-         
+
         //#endregion
     }
 
     return {
         //初始化方法
         init: init,
-        //操作模块
-        operate: operate
+        //列属性操作模块
+        columnOperate: columnOperate,
+        //查询条件操作模块
+        conditionOperate: conditionOperate
     }
 }
 

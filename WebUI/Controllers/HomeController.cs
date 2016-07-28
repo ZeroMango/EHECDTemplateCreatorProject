@@ -18,5 +18,10 @@ namespace WebUI.Controllers
         {
             return PartialView();
         }
+
+        public PartialViewResult EditConditionOptions(string type)
+        {            
+            return PartialView("EditConditionOptions",type);
+        }
     }
 }

@@ -167,6 +167,7 @@
     <Content Include="Content\themes\black\tree.css" />
     <Content Include="Content\themes\black\validatebox.css" />
     <Content Include="Content\themes\black\window.css" />
+    <Content Include="Content\themes\bootstrap.min.css" />
     <Content Include="Content\themes\bootstrap\accordion.css" />
     <Content Include="Content\themes\bootstrap\calendar.css" />
     <Content Include="Content\themes\bootstrap\combo.css" />
@@ -495,11 +496,15 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\ConditionTagHelper.cs" />
+    <Compile Include="App_Start\FieldAttribute.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\TagHelper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\TextBoxOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -507,6 +512,7 @@
     <Content Include="packages.config" />
     <Content Include="scripts\jquery-1.11.3.min.map" />
     <Content Include="Views\Home\AddDatagrid.cshtml" />
+    <Content Include="Views\Home\EditConditionOptions.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -516,7 +522,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -1,0 +1,12 @@
+﻿
+@model String
+
+<table class="tabs-container" style="width:100%;height:100%">    
+    @(WebUI.App_Start.TagHelperFactory.CreateTagHelper(Model).LoadHtmlString())
+</table>
+
+
+
+
+
+
