@@ -101,7 +101,7 @@ var pagectrl = (function PageControl() {
         qq: navigator.userAgent.match(/\sQQ/i) == " qq"
     };
 
-    this.alertIcon = {
+    var alertIcon = {
         error: "error",
         question: "question",
         info: "info",
@@ -131,7 +131,7 @@ var pagectrl = (function PageControl() {
                 if (selectedRows !== null && selectedRows !== undefined) {
                     callBackFuc(selectedRows);
                 } else {
-                    pagectrl.fuc.alert(unSelectRowsMessage, "请注意", pagectrl.alertIcon.info, null);
+                    pagectrl.func.alert(unSelectRowsMessage, "请注意", pagectrl.alertIcon.info, null);
                 }
             } catch (e) {
                 throw createErrorInfo(errorInfos.dependEasyui$checkHasSelectedSingleRow$Error, [e.message, "dependEasyui$checkHasSelectedSingleRow"]);
@@ -811,8 +811,8 @@ var pagectrl = (function PageControl() {
         /*
         * file转base编码，并压缩file
         * 用法如下
-            fuc.FileToBase64(file, function(base64) {
-                fuc.AutoResizeImage(base64, 0, 0, function (zipbase64) {
+            func.FileToBase64(file, function(base64) {
+                func.AutoResizeImage(base64, 0, 0, function (zipbase64) {
                 
                 });
             });
@@ -838,7 +838,7 @@ var pagectrl = (function PageControl() {
         * maxHeight:最大图像高度，0为auto
         * fn(base64):压缩完成后回调，返回base64编码
         * 用法如下
-            fuc.AutoResizeImage(base64, 0, 0, function (zipbase64) {
+            func.AutoResizeImage(base64, 0, 0, function (zipbase64) {
             
             });
         */
@@ -945,7 +945,9 @@ var pagectrl = (function PageControl() {
         //元素操作模块
         element: element,
         //公用方法模块
-        func: func
+        func: func,
+        //alert消息的图标枚举
+        alertIcon: alertIcon
     };
 })();
 
