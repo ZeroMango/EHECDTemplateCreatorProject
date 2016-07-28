@@ -440,7 +440,7 @@ function MainCtrl() {
                 $(this).datagrid("beginEdit", index);
             }
         });
-
+         
         //#endregion
     }
 
