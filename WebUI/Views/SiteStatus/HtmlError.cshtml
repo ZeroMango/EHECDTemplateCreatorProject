@@ -1,0 +1,41 @@
+﻿@model Int32
+
+<style type="text/css">
+    .content-father-div {
+        height: 98%;
+        background-color: crimson;
+        border-color: darkred;
+        border-style: dotted;
+        border-width: 5px;
+    }
+
+    .content-div {
+        height: 200px;
+        font-size: 18px;
+        font-style: inherit;
+        font-weight: 100;
+        color: cornsilk;
+        font-family: '幼圆';
+        text-align: center;
+        padding-top: 150px;
+    }
+</style>
+<meta name="viewport" content="width=device-width" />
+<div class="content-father-div">
+    <div class="content-div">
+        @{
+            if (Model == 500)
+            {
+                <span>对不起，这里除了一点小差错，不过我们已经知道了，给您带来的不便尽情谅解！</span>
+                <br />
+                <img style="margin-top:30px" src="/Content/500.png" />
+            }
+            else if (Model == 404)
+            {
+                <span>对不起，我们找不到您要浏览的网页，不过我们已经知道了，争取下次会给您加上！</span>
+                <br />
+                <img style="margin-top:30px" src="/Content/404.png" />
+            }
+        }
+    </div>
+</div>

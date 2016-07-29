@@ -6,19 +6,22 @@ using System.Web;
 
 namespace WebUI.App_Start
 {
+    /// <summary>
+    /// 查询条件的标签生成器
+    /// </summary>
     public class ConditionTagHelper : TagHelper
     {
         public ConditionTagHelper(Type t) : base(t)
         {
         }
 
+
         public override HtmlString LoadHtmlString()
         {
-            StringBuilder sb = new StringBuilder();
-
             var fields = t.GetFields();
 
-            var attrs = fields.AsParallel().Select(p =>
+            //获取标签html            
+            var html = string.Join("", fields.AsParallel().Select(p =>
             {
                 var attr = p.GetCustomAttributes(typeof(FieldAttribute), false)[0] as FieldAttribute;
 
@@ -50,9 +53,7 @@ namespace WebUI.App_Start
                     inputType = inputType
                 };
 
-            }).ToArray();
-
-            var html = string.Join("", attrs.AsParallel().Select(p =>
+            }).AsParallel().Select(p =>
             {
                 return string.Format(this._rowHtmlString, p.title, p.name, p.inputType);
             }));

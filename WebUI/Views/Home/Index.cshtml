@@ -11,11 +11,11 @@
     <title>代码模板生成</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="~/Content/themes/bootstrap/easyui.css" rel="stylesheet" />
-    <link href="~/Content/themes/icon.css" rel="stylesheet" />        
-    
+    <link href="~/Content/themes/icon.css" rel="stylesheet" />
+
     <link href="~/Content/home.css" rel="stylesheet" />
 
-    <script src="~/scripts/jquery-1.11.3.min.js"></script>   
+    <script src="~/scripts/jquery-1.11.3.min.js"></script>
     <script src="~/scripts/jquery.easyui-1.4.5.min.js"></script>
     <script src="~/scripts/locale/easyui-lang-zh_CN.js"></script>
     <script src="~/scripts/lib/page_contrl_base.js"></script>
@@ -30,8 +30,30 @@
             <div id="dl"></div>
         </div>
         <div data-options="region:'west',title:'已有元素',split:true,expandMode:'float',collapsible:false" style="width:200px;"></div>
-        <div data-options="region:'center',title:'实时效果',collapsible:false" style="padding:5px;background:#eee;">
+        <div data-options="region:'center',title:'实时效果',collapsible:false" style="padding:5px;" id="layout_center">
+            <table id="cc"></table>
+            <div id="dd" style="padding:10px">
+                物流模板名称：<input type="text" class="easyui-textbox sName" data-options="width:120,validType:'maxLength[50]'" />&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0)" plain="false" iconcls="icon-search" class="easyui-linkbutton search">查询</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0)" plain="false" iconcls="icon-add" class="easyui-linkbutton additem">新建</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0)" plain="false" iconcls="icon-edit" class="easyui-linkbutton edititem">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="javascript:void(0)" plain="false" iconcls="icon-remove" class="easyui-linkbutton deleteitem">删除</a>
+            </div>
             
+            <script type="text/javascript">
+                $("#cc").datagrid({
+                    fit: true,
+                    toolbar: "#dd",
+                    pagination: true,
+                    columns: [[
+        { field: 'code', title: 'Code', width: 100 },
+        { field: 'name', title: 'Name', width: 100 },
+        { field: 'price', title: 'Price', width: 100, align: 'right' }
+                    ]]
+                });
+
+            </script>
+
         </div>
     </div>
 

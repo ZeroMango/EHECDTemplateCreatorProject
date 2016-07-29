@@ -47,7 +47,17 @@ function MainCtrl() {
                     text: '添加',
                     iconCls: 'icon-add',
                     handler: function () {
-
+                        "use strict";
+                        if (dotype === 0) {
+                            let prop = {
+                                columns: $("#dt_dtgd").datagrid("getRows"),
+                                conditions: $("#dt_dttlgd").datagrid("getRows")
+                            };
+                            var ret = realTimeOperate.enterCreateDataGrid(prop);
+                            if (ret) {
+                                operateDialog.dialog("close");
+                            }
+                        }
                     }
                 }, {
                     text: '关闭',
@@ -60,7 +70,7 @@ function MainCtrl() {
                     if (dotype === 0) {
                         //初始化添加datagrid的窗口元素
                         AddDatagridControl();
-                        //调整两个datagrid的位置
+                        //调整三个datagrid的位置
                         $("#dt_dtgd").datagrid().parent().parent().parent().css("margin", "5px");
                         $("#dt_dttlgd").datagrid().parent().parent().parent().css("margin", "5px");
                         $("#dt_dttlgd2").datagrid().parent().parent().parent().css("margin", "5px");
@@ -169,7 +179,9 @@ function MainCtrl() {
         function editCondition() {
             try {
                 pagectrl.element.dependEasyui$checkHasSelectedSingleRow(conditionID, function (selectedRow) {
-                    $(conditionID).datagrid("beginEdit", $(conditionID).datagrid("getRowIndex", selectedRow));
+                    var index = $(conditionID).datagrid("getRowIndex", selectedRow);
+                    $(conditionID).datagrid("updateRow", { index: index, row: { options: "" } });
+                    $(conditionID).datagrid("beginEdit", index);
                 }, "请选中你要编辑的查询条件");
             } catch (e) {
                 pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
@@ -197,26 +209,37 @@ function MainCtrl() {
         function openConditionPropertyDialog() {
             try {
                 pagectrl.element.dependEasyui$checkHasSelectedSingleRow(conditionID, function (selectedRow) {
+                    $(conditionID).datagrid("endEdit", $(conditionID).datagrid("getRowIndex", selectedRow));
+                    var canSubmit = false;
                     var div = $("<div/>");
                     div.css("padding", "5px");
                     div.dialog({
                         title: "编辑控件属性",
                         width: 400,
-                        height: 600,                        
+                        height: 600,
                         buttons: [{
                             text: '确定',
                             iconCls: 'icon-ok',
                             handler: function () {
-                                "use strict";                                
-                                //获取选中行的行下标
-                                let rowIndex = $(conditionID).datagrid("getRowIndex", selectedRow);
-                                //更新行数据
-                                $(conditionID).datagrid("updateRow", {
-                                    index: rowIndex,
-                                    row: { options: "fuck you all!" }
-                                });
-                                //关闭窗口
-                                div.dialog("close");                               
+                                "use strict";
+                                if (canSubmit) {
+
+                                    //获取选中行的行下标
+                                    let rowIndex = $(conditionID).datagrid("getRowIndex", selectedRow);
+
+                                    //获取数据
+                                    let data = getConditionsString(div);
+
+                                    //更新行数据
+                                    $(conditionID).datagrid("updateRow", {
+                                        index: rowIndex,
+                                        row: { options: data }
+                                    });
+                                    //关闭窗口
+                                    div.dialog("close");
+                                } else {
+                                    pagectrl.func.alert("请等待数据加载完成", "错误", pagectrl.alertIcon.error);
+                                }
                             }
                         }, {
                             text: '关闭',
@@ -225,7 +248,9 @@ function MainCtrl() {
                                 //关闭窗口
                                 div.dialog("close");
                             }
-                        }],
+                        }], onLoad: function () {
+                            canSubmit = true;
+                        },
                         onClose: function () {
                             //关闭时摧毁该窗口
                             div.dialog("destroy");
@@ -233,6 +258,67 @@ function MainCtrl() {
                     }).dialog("open").dialog("refresh", "/Home/EditConditionOptions?type={0}".format([selectedRow.controlType]));
 
                 }, "你为啥子不选你要添加属性的查询条件喃？瓜的嗦？");
+            } catch (e) {
+                pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
+            }
+        }
+
+        /**
+         *  获取条件options的字符串
+         * @param {type} div 容器
+         */
+        function getConditionsString(div) {
+            "use strict";
+            try {
+                var trs = div.find("tr");
+                var params = {};
+                $.each(trs, function (index, item) {
+                    var tds = $(item).find("td");
+                    var optionName = tds[1].textContent;
+                    var type = $(tds[2]).find("input[data-tag]");
+
+                    if (type.hasClass("easyui-numberbox")) {
+                        params[optionName] = {};
+                        params[optionName].value = type.numberbox("getValue");
+                        params[optionName].type = "number";
+
+                        return true;
+                    }
+
+                    if (type.hasClass("easyui-textbox")) {
+                        params[optionName] = {};
+                        params[optionName].value = type.textbox("getText");
+                        params[optionName].type = "text";
+                        return true;
+                    }
+
+                    if (type.length > 1 && $(type[0]).attr("type") === "radio") {
+                        params[optionName] = [];
+                        params[optionName].value = $(tds[2]).find("input[data-tag]:checked").length === 0 ? "" : $(tds[2]).find("input[data-tag]:checked").val();
+                        params[optionName].type = "bool";
+                        return true;
+                    }
+                });
+
+                var ret = [];
+
+                for (let key in params) {
+                    let v = params[key];
+                    if (v.value != "") {
+                        if (v.type === "number" || v.type === "bool") {
+                            ret.push(key + ":" + params[key].value);
+                            continue;
+                        }
+
+                        if (v.type === "text") {
+                            ret.push(key + ":\"" + params[key].value + "\"");
+                            continue;
+                        }
+                    }
+                }
+
+                return ret.join(",");
+
             } catch (e) {
                 pagectrl.func.alert(e.message, "错误", pagectrl.alertIcon.error);
             }
@@ -340,14 +426,14 @@ function MainCtrl() {
 
                                 if (formatterString && formatterString.length > 0) {
                                     //获取选中行的行数据
-                                    let rowData = $("#dt_dtgd").datagrid("getSelected");                                    
+                                    let rowData = $("#dt_dtgd").datagrid("getSelected");
                                     //获取选中行的行下标
                                     let rowIndex = $("#dt_dtgd").datagrid("getRowIndex", rowData);
                                     //更新行数据
                                     $("#dt_dtgd").datagrid("updateRow", {
                                         index: rowIndex,
                                         row: { formatter: formatterString }
-                                    });                                    
+                                    });
                                     //关闭窗口
                                     div.dialog("close");
                                 } else {
@@ -384,6 +470,173 @@ function MainCtrl() {
             endEditGridColProperty: endEditGridColProperty,
             openColumnFormatterDialog: openColumnFormatterDialog
         };
+    })();
+
+    /**
+     * 实时显示的操作
+     */
+    var realTimeOperate = (function RealTimeOperate() {
+
+        var showid = "#layout_center";
+
+        function enterCreateDataGrid(prop) {
+            try {
+                if (pagectrl.func.isHasValuesArray(prop.columns)) {
+                    //1.创建一个table
+                    var tab = $("<table/>");
+
+                    //列属性
+                    var colProps = [];
+                    //列属性
+                    var _coprop = [];
+
+                    //测试数据
+                    var textData = {};
+
+                    //2.创建列属性集合
+                    $.each(prop.columns, function (index, item) {
+
+                        var p = {};
+
+                        p.field = item.field;
+                        p.title = item.columnName;
+                        p.width = item.width;
+                        p.align = item.align;
+                        if (item.formatter !== "") {
+                            p.formatter = function (value, row, index) {
+                                return eval(item.formatter);
+                            }
+                        }
+                        _coprop.push(p);
+
+                        //创建测试数据字段
+                        textData[p.field] = p.field;
+                    });
+
+                    //给字段赋值
+                    for (var i in textData) {
+                        textData[i] = "textdata";
+                    }
+
+                    //添加列属性
+                    colProps.push(_coprop);
+
+                    $(showid).html("");
+                    $(showid).append(tab);
+
+                    var condition = getConditionhtml(prop.conditions);
+                    if (condition !== null) {
+                        tab.datagrid({
+                            toolbar: "#show_tools",
+                            fit: true,
+                            pagination: true,
+                            columns: colProps
+                        });
+                    } else {
+                        tab.datagrid({
+                            fit: true,
+                            pagination: true,
+                            columns: colProps
+                        });
+                    }
+
+                    tab.datagrid("loadData", [textData]);
+
+                    return true;
+
+                } else {
+                    pagectrl.func.alert("请添加列属性！", "提示", pagectrl.alertIcon.info, null);
+                    return false;
+                }
+            } catch (e) {
+                pagectrl.func.alert(e.message, "异常", pagectrl.alertIcon.error, null);
+                return false;
+            }
+        }
+
+        /**
+         * 获取查询条件节点
+         * @param {Array} conditions 查询的条件
+         * @returns {Objec} null 或者 节点 null表示没有条件，否则返回生成的节点
+         */
+        function getConditionhtml(conditions) {
+            try {
+                if (pagectrl.func.isHasValuesArray(conditions)) {
+                    var toolid = "show_tools";
+                    var div = $("<div/>");
+                    div.attr("id", toolid);
+                    div.css("padding", "15px");
+
+                    $(showid).append(div);
+
+                    $.each(conditions, function (index, item) {
+                        getCondition(item, toolid);
+                    });
+                    return div;
+                }
+                return null;
+            } catch (e) {
+                pagectrl.func.alert(e.message, "异常", pagectrl.alertIcon.error, null);
+                return null;
+            }
+        }
+
+        /**
+         * 获取查询条件生成的节点
+         * @param {Objec} p
+         * @returns {Object} 
+         */
+        function getCondition(p, toolid) {
+            try {
+                switch (p.controlType) {
+
+                    case "textbox":
+                        getTextBoxCondition(p, toolid);
+                        break;
+
+                    default:
+                        break;
+                }
+            } catch (e) {
+                pagectrl.func.alert(e.message, "异常", pagectrl.alertIcon.error, null);
+                return null;
+            }
+        }
+
+        /**
+         * 获取textbox查询条件
+         * @param {type} p
+         * @returns {type} 
+         */
+        function getTextBoxCondition(p, toolid) {
+            try {
+                var textbox = $("<input/>");
+                textbox.addClass(p.fieldName);
+                $("#" + toolid).append(p.conditionDes);
+                $("#" + toolid).append(textbox);
+
+                var opStr = [];
+                if (p.options.length > 0) {
+                    $.each(p.options.split(","), function (index, item) {
+                        var op = item.split(":");
+                        opStr.push(("\"" + op[0] + "\"") + ":" + op[1]);
+                    });
+                    opStr = opStr.join(",");
+                    var opt = JSON.parse("{" + opStr + "}");
+                    textbox.textbox(opt);                    
+                } else {
+                    textbox.textbox({});
+                }
+            } catch (e) {
+                pagectrl.func.alert(e.message, "异常", pagectrl.alertIcon.error, null);
+                return null;
+            }
+        }
+
+        return {
+            enterCreateDataGrid: enterCreateDataGrid
+        }
+
     })();
 
     /**
@@ -489,6 +742,10 @@ function MainCtrl() {
                                 "text": "textbox",
                                 "selected": true
                             }, {
+                                "id": "numberbox",
+                                "text": "numberbox",
+                                "selected": true
+                            }, {
                                 "id": "combo",
                                 "text": "combo"
                             }, {
@@ -516,6 +773,7 @@ function MainCtrl() {
                 { field: 'options', halign: "left", align: "left", title: '属性', width: 180 }
             ]], fitColumns: true,
             onDblClickRow: function (index, row) {
+                $(this).datagrid("updateRow", { index: index, row: { options: "" } });
                 //双击行开始编辑
                 $(this).datagrid("beginEdit", index);
             }

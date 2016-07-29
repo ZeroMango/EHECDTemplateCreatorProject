@@ -9,9 +9,9 @@ namespace WebUI.App_Start
     public abstract class TagHelper
     {
         protected string _rowHtmlString = "<tr class=\"tabs-header\"><td>{0}</td><td>{1}</td><td>{2}</td></tr>";
-        protected string _numberboxString = "<input type=\"text\" class=\"easyui-numberbox\" data-options=\"width:80,precision:0\" />";
-        protected string _textboxString = "<input type=\"text\" class=\"easyui-textbox\" data-options=\"width:80\" />";
-        protected string _radioString = "<input type=\"radio\" name=\"{0}\" value=\"true\" />是<input type=\"radio\" name=\"{0}\" value=\"false\" />否";
+        protected string _numberboxString = "<input type=\"text\" class=\"easyui-numberbox\" data-tag=\"condition\" data-options=\"width:80,precision:0\" />";
+        protected string _textboxString = "<input type=\"text\" class=\"easyui-textbox\" data-tag=\"condition\" data-options=\"width:80\" />";
+        protected string _radioString = "<input type=\"radio\" name=\"{0}\" data-tag=\"condition\" value=\"true\" />是<input type=\"radio\" data-tag=\"condition\" name=\"{0}\" value=\"false\" />否";
         protected Type t;
 
         public TagHelper(Type t) {
@@ -31,6 +31,10 @@ namespace WebUI.App_Start
             {
                 case "textbox":
                     _type = typeof(TextBoxOptions);
+                    break;
+
+                case "numberbox":
+                    _type = typeof(NumberboxOptions);
                     break;
 
                 default:
