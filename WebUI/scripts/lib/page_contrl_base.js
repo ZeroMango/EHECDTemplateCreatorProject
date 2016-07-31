@@ -34,6 +34,10 @@ String.prototype.format = function (args) {
     return result;
 }
 
+String.prototype.replaceAll = function (replaceStr, toString) {
+    return this.replace(new RegExp(replaceStr, 'gm'), toString);
+}
+
 /**
  * 工具类库
  *     该库中所有方法遇到异常将不做处理，但会封装
@@ -108,7 +112,7 @@ var pagectrl = (function PageControl() {
         warning: "warning"
     };
 
-    ////new function PageElement() {
+    var loader = loadExData();
 
     /**
      * 元素操作模块
@@ -518,6 +522,11 @@ var pagectrl = (function PageControl() {
             return uuid;
         }
 
+        function guid() {
+            var s4 = function () { return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1); };
+            return (s4() + s4() + "" + s4() + "" + s4() + "" + s4() + "" + s4() + s4() + s4()).toUpperCase();
+        };
+
         function calculateByExpression(expression, precision, isFourHomesFive) {
             /// <summary>根据表达式计算结果，表达式是数字和数字之间的+、-、*、/、%等算法，精度将依照设置的精度返回double值</summary>     
             /// <param name="expression" type="String">计算表达式</param>        
@@ -808,6 +817,132 @@ var pagectrl = (function PageControl() {
             return clientType;
         }
 
+        /* 
+        * jQuery Ajax调用封装
+        * url:			调用地址
+        * data:			可选参数,表示Ajax调用参数
+        * onSuccess:	可选参数,成功回调函数,函数签名为  function(data), data参数为调用结果
+        * unSucess:	    可选参数,服务端返回失败时的回调
+        * modal:		可选参数,是否作为模态对话框显示，默认为true
+        * async:		可选参数,是否异步调用，默认为true
+        * onError:		可选参数,失败回调函数,函数签名为  function (XMLHttpRequest, textStatus, errorThrown)
+        * onComplete:	可选参数,Ajax调用完成回调函数,函数签名为  function (XMLHttpRequest, textStatus)
+        * dataType:		可选参数,Ajax返回数据类型,默认为 "text"
+        */
+        function AjaxPost(url, data, onSuccess, unSucess, modal, async, onError, onComplete, dataType) {
+            var mask = null;
+            modal = (modal === false ? false : true);
+            if (modal) {
+                mask = new Maskwin();
+                mask.show();
+            }
+
+            var jsonData = {
+                data: data
+            };
+            //var tempData = JSON.stringify(data).UrlEncode();
+            //var tempBytes = loader.loadDatas(tempData);
+            //var sortArray = tempBytes.sort(function (a, b) { return a - b; });
+            //var doData = sortArray.toString();
+
+            //jsonData.sign = loader.loadData(doData);
+            //jsonData.dec = "111";
+
+            var ajaxHandler = $.ajax({
+                type: "post",
+                url: url,
+                cache: false,
+                contentType: "application/x-www-form-urlencoded",
+                dataType: (dataType ? dataType : "text"),
+                data: zip(jsonData),
+                async: (async == false ? async : true),
+                success: function (json) {
+                    if (mask) {
+                        mask.hide();
+                    }
+                    var result = JSON.parse(json || null);
+                    try {
+                        result.Data = JSON.parse(result.Data || null);
+                    } catch (e) {
+                    }
+
+                    if (result.Succeeded) {
+                        onSuccess(result);
+                    }
+
+                    if (!result.Succeeded && unSucess) {
+                        unSucess(result);
+                    }
+                },
+                error: onError ? onError : function () {
+                    ajaxHandler.abort();
+                    mask.hide();
+                },
+                complete: function (XMLHttpRequest, status) { //请求完成后最终执行参数
+                    if (status === 'timeout') { //超时,status还有success,error等值的情况
+                        alert("访问超时");
+                        ajaxHandler.abort();
+                        mask.hide();
+                    }
+                }
+            });
+        }
+
+        function showErrorPage(url) {
+            try {
+                var div = $("<div/>");
+                div.css("padding", "5px");
+                div.dialog({
+                    title: "不好意思出错啦",
+                    width: 600,
+                    height: 400,
+                    buttons: [{
+                        text: '确定',
+                        iconCls: 'icon-ok',
+                        handler: function () {
+                            div.dialog("close");
+                        }
+                    }],
+                    onClose: function () {
+                        //关闭时摧毁该窗口
+                        div.dialog("destroy");
+                    }
+                }).dialog("open").dialog("refresh", url);
+            } catch (e) {
+                throw e;
+            }
+        }
+
+        function getTimeStamp(jsondate) {
+            if (!jsondate) {
+                return "";
+            }
+            jsondate = jsondate + "";
+            if (!/^\/Date[(].+[)]\/$/.test(jsondate)) return jsondate.replace("T", " ");
+            jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+            if (jsondate.indexOf("+") > 0) {
+                jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+            }
+            else if (jsondate.indexOf("-") > 0) {
+                jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+            }
+            return jsondate;
+        }
+
+        /**
+         * 对参数进行编码
+         * @param {json} jsonObj
+         * @returns {string} 
+         */
+        function zip(jsonObj) {
+            if (!jsonObj) return jsonObj;
+            if (jsonObj instanceof String) {
+                return encodeURIComponent(jsonObj);
+            } else {
+                return encodeURIComponent(JSON.stringify(jsonObj));
+            }
+        }
+
         /*
         * file转base编码，并压缩file
         * 用法如下
@@ -937,7 +1072,9 @@ var pagectrl = (function PageControl() {
             getClientType: getClientType,
             FileToBase64: FileToBase64,
             AutoResizeImage: AutoResizeImage,
-            alert: alert
+            alert: alert,
+            post: AjaxPost,
+            showErrorPage:showErrorPage
         };
     })();
 
@@ -951,5 +1088,18 @@ var pagectrl = (function PageControl() {
     };
 })();
 
-
+//遮罩层
+Maskwin = function () {
+    this.show = function (msg) {
+        var h = $(document).height();
+        this.maskmsg = $('<div style="height:100%;width:100%;position:fixed;z-index:99999;background: rgba(0,0,0,0.3);left:0px;top:0px;"><div title="" style="position:absolute;left:45%;top:45%;margin-left:-62px;margin-top:-62px;height:230px;line-height:230px;width:230px;vertical-align:middle;overflow:hidden;color:white;"><div id="spinnerX" class="spinner"><i></i></div></div></div>');
+        if (msg) {
+            this.maskmsg.find("div").text(msg);
+        }
+        this.maskmsg.appendTo("body");
+    };
+    this.hide = function () {
+        this.maskmsg.remove();
+    };
+};
 

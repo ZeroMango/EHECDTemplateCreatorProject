@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using DataReceptionTransmission;
+using System;
 using System.Web.Mvc;
+using WebUI.App_Start;
 
 namespace WebUI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : SuperController
     {
         // GET: Home
         public ActionResult Index()
@@ -20,8 +19,19 @@ namespace WebUI.Controllers
         }
 
         public PartialViewResult EditConditionOptions(string type)
-        {            
-            return PartialView("EditConditionOptions",type);
+        {
+            return PartialView("EditConditionOptions", type);
+        }
+
+        public void GeneratorCode()
+        {
+            var rparams = ParameterLoader.ConvertJsonToData<object[]>(RequestParameters.data.ToString());
+            CodeGenerator.CodeGenerator cg = new CodeGenerator.HTMLCodeGenerator();
+            cg.SetResult(new System.Collections.Generic.List<string>());
+            cg.Path = System.IO.Path.Combine(Server.MapPath("/"), "Codes");
+            cg.GenerateCode(rparams);
+            result.Data = string.Join(",", cg.GetResult());
+            result.Succeeded = true;
         }
     }
 }

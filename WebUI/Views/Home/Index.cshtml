@@ -18,7 +18,19 @@
     <script src="~/scripts/jquery-1.11.3.min.js"></script>
     <script src="~/scripts/jquery.easyui-1.4.5.min.js"></script>
     <script src="~/scripts/locale/easyui-lang-zh_CN.js"></script>
+    @*<script src="~/scripts/lib/code_module.js"></script>*@
+    <script src="~/scripts/lib/data_jm_off_model.js"></script>
     <script src="~/scripts/lib/page_contrl_base.js"></script>
+    <script src="~/scripts/lib/init_add_datagrid_module.js"></script>
+    <script src="~/scripts/lib/condition_operate_module.js"></script>
+    <script src="~/scripts/lib/column_operate_module.js"></script>
+    <script src="~/scripts/lib/real_time_show_operate.js"></script>
+    <script src="~/scripts/lib/datalist_operate_module.js"></script>
+    <script src="~/scripts/lib/tool_operate_module.js"></script>
+    <script src="~/scripts/lib/generator_cache_module.js"></script>
+    <script src="~/scripts/lib/generator_code_from_server_module.js"></script>
+    <script src="~/scripts/lib/allready_element_operate_module.js"></script>
+
     <script src="~/scripts/lib/main.js"></script>
 </head>
 <body>
@@ -26,37 +38,18 @@
     <div id="main_layout" class="easyui-layout" data-options="fit:true">
         <div data-options="region:'north',title:'说明',split:false,expandMode:'float',collapsible:false" style="height:140px;"></div>
         <div data-options="region:'south',title:'',split:true,expandMode:'float',collapsible:false" style="height:60px;background-color:darkgrey"></div>
-        <div data-options="region:'east',iconCls:'icon-edit',title:'操作菜单',split:true,expandMode:'float',collapsible:false" style="width:200px;">
+        <div data-options="region:'east',iconCls:'icon-edit',title:'操作菜单',split:true,expandMode:'float',collapsible:false,width:200">
             <div id="dl"></div>
         </div>
-        <div data-options="region:'west',title:'已有元素',split:true,expandMode:'float',collapsible:false" style="width:200px;"></div>
-        <div data-options="region:'center',title:'实时效果',collapsible:false" style="padding:5px;" id="layout_center">
-            <table id="cc"></table>
-            <div id="dd" style="padding:10px">
-                物流模板名称：<input type="text" class="easyui-textbox sName" data-options="width:120,validType:'maxLength[50]'" />&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0)" plain="false" iconcls="icon-search" class="easyui-linkbutton search">查询</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0)" plain="false" iconcls="icon-add" class="easyui-linkbutton additem">新建</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0)" plain="false" iconcls="icon-edit" class="easyui-linkbutton edititem">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="javascript:void(0)" plain="false" iconcls="icon-remove" class="easyui-linkbutton deleteitem">删除</a>
-            </div>
-            
-            <script type="text/javascript">
-                $("#cc").datagrid({
-                    fit: true,
-                    toolbar: "#dd",
-                    pagination: true,
-                    columns: [[
-        { field: 'code', title: 'Code', width: 100 },
-        { field: 'name', title: 'Name', width: 100 },
-        { field: 'price', title: 'Price', width: 100, align: 'right' }
-                    ]]
-                });
+        <div data-options="region:'west',title:'已有元素',iconCls:'icon-add',split:true,expandMode:'float',collapsible:false" style="width:200px;">
+            <div id="adl" data-options="fit:true,fitColumns:true"></div>
+        </div>
+        <div data-options="region:'center',title:'实时效果',collapsible:false" style="padding:2px;">
 
-            </script>
+            <div id="layout_center" style="padding:2px" class="easyui-panel" data-options="fit:true"></div>
 
         </div>
     </div>
-
     <div id="operate_dialog">
 
     </div>

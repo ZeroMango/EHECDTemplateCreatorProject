@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -47,8 +47,8 @@
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AI.DependencyCollector, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -76,7 +76,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -461,8 +461,8 @@
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
-    <Content Include="Content\themes\material\images\Thumbs.db" />
     <Content Include="Content\home.css" />
+    <Content Include="Content\themes\material\images\Thumbs.db" />
     <None Include="scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="scripts\easyloader.js" />
     <Content Include="scripts\jquery-1.11.3.js" />
@@ -471,8 +471,19 @@
     <Content Include="scripts\jquery.easyui-1.4.5.min.js" />
     <Content Include="scripts\jquery.easyui.mobile-1.4.5.js" />
     <Content Include="scripts\jquery.easyui.mobile-1.4.5.min.js" />
+    <Content Include="scripts\lib\allready_element_operate_module.js" />
+    <Content Include="scripts\lib\code_module.js" />
+    <Content Include="scripts\lib\column_operate_module.js" />
+    <Content Include="scripts\lib\condition_operate_module.js" />
+    <Content Include="scripts\lib\data_jm_off_model.js" />
+    <Content Include="scripts\lib\generator_code_from_server_module.js" />
+    <Content Include="scripts\lib\datalist_operate_module.js" />
+    <Content Include="scripts\lib\generator_cache_module.js" />
+    <Content Include="scripts\lib\init_add_datagrid_module.js" />
     <Content Include="scripts\lib\main.js" />
     <Content Include="scripts\lib\page_contrl_base.js" />
+    <Content Include="scripts\lib\real_time_show_operate.js" />
+    <Content Include="scripts\lib\tool_operate_module.js" />
     <Content Include="scripts\locale\easyui-lang-af.js" />
     <Content Include="scripts\locale\easyui-lang-am.js" />
     <Content Include="scripts\locale\easyui-lang-ar.js" />
@@ -506,7 +517,13 @@
     <Compile Include="App_Start\FieldAttribute.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SuperController.cs" />
     <Compile Include="App_Start\TagHelper.cs" />
+    <Compile Include="CodeGenerator\BussinessCodeGenerator.cs" />
+    <Compile Include="CodeGenerator\CodeGenerator.cs" />
+    <Compile Include="CodeGenerator\ControllerCodeGenerator.cs" />
+    <Compile Include="CodeGenerator\HTMLCodeGenerator.cs" />
+    <Compile Include="CodeGenerator\JavaScriptCodeGenerator.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SiteStatusController.cs" />
     <Compile Include="Global.asax.cs">
@@ -532,10 +549,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Codes\" />
     <Folder Include="Log\LogError\" />
+    <Folder Include="Views\Super\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataReceptionTransmission\DataReceptionTransmission.csproj">
+      <Project>{87a2157d-da40-4160-9abe-e7b15ddf3f52}</Project>
+      <Name>DataReceptionTransmission</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -567,7 +592,7 @@
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.1\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
