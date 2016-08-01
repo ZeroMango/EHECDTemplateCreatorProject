@@ -46,3 +46,103 @@
    在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
    在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3d()
    在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass46.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3f()
+
+===================================================================================================
+异常时间：2016-08-01 22:12:47,028 
+异常级别：ERROR 
+异 常 类：WebUI.CodeGenerator.HTMLCodeGenerator 
+所在方法：CreateHtmlCode
+异常简述：生成失败，参数错误
+详细信息：
+   在 WebUI.CodeGenerator.HTMLCodeGenerator.CreateHtmlCode(String fileName, Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\HTMLCodeGenerator.cs:行号 90
+   在 WebUI.CodeGenerator.HTMLCodeGenerator.GenerateCode(Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\HTMLCodeGenerator.cs:行号 24
+   在 WebUI.Controllers.HomeController.GeneratorCode() 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\Controllers\HomeController.cs:行号 32
+   在 lambda_method(Closure , ControllerBase , Object[] )
+   在 System.Web.Mvc.ActionMethodDispatcher.<>c__DisplayClass1.<WrapVoidAction>b__0(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ActionMethodDispatcher.Execute(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<BeginInvokeSynchronousActionMethod>b__39(IAsyncResult asyncResult, ActionInvocation innerInvokeState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`2.CallEndDelegate(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3d()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass46.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3f()
+
+===================================================================================================
+异常时间：2016-08-01 22:13:15,198 
+异常级别：ERROR 
+异 常 类：WebUI.CodeGenerator.HTMLCodeGenerator 
+所在方法：CreateHtmlCode
+异常简述：生成失败，参数错误
+详细信息：
+   在 WebUI.CodeGenerator.HTMLCodeGenerator.CreateHtmlCode(String fileName, Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\HTMLCodeGenerator.cs:行号 90
+   在 WebUI.CodeGenerator.HTMLCodeGenerator.GenerateCode(Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\HTMLCodeGenerator.cs:行号 24
+   在 WebUI.Controllers.HomeController.GeneratorCode() 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\Controllers\HomeController.cs:行号 32
+   在 lambda_method(Closure , ControllerBase , Object[] )
+   在 System.Web.Mvc.ActionMethodDispatcher.<>c__DisplayClass1.<WrapVoidAction>b__0(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ActionMethodDispatcher.Execute(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<BeginInvokeSynchronousActionMethod>b__39(IAsyncResult asyncResult, ActionInvocation innerInvokeState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`2.CallEndDelegate(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3d()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass46.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3f()
+
+===================================================================================================
+异常时间：2016-08-01 22:17:31,023 
+异常级别：ERROR 
+异 常 类：System.Text.StringBuilder 
+所在方法：AppendFormatHelper
+异常简述：输入字符串的格式不正确。
+详细信息：
+   在 System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.Format(String format, Object arg0)
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.CreateDatagridCode(String v, String functionName) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 151
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.<CreateJavascriptCode>b__2_0(String s1, String s2) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 89
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.CreateJavascriptCode(String fileName, Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 107
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.GenerateCode(Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 24
+   在 WebUI.CodeGenerator.HTMLCodeGenerator.GenerateCode(Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\HTMLCodeGenerator.cs:行号 27
+   在 WebUI.Controllers.HomeController.GeneratorCode() 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\Controllers\HomeController.cs:行号 32
+   在 lambda_method(Closure , ControllerBase , Object[] )
+   在 System.Web.Mvc.ActionMethodDispatcher.<>c__DisplayClass1.<WrapVoidAction>b__0(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ActionMethodDispatcher.Execute(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<BeginInvokeSynchronousActionMethod>b__39(IAsyncResult asyncResult, ActionInvocation innerInvokeState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`2.CallEndDelegate(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3d()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass46.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3f()
+
+===================================================================================================
+异常时间：2016-08-01 22:20:08,124 
+异常级别：ERROR 
+异 常 类：System.Text.StringBuilder 
+所在方法：AppendFormatHelper
+异常简述：输入字符串的格式不正确。
+详细信息：
+   在 System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.Format(String format, Object arg0)
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.CreateDatagridCode(String v, String functionName) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 151
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.<CreateJavascriptCode>b__2_0(String s1, String s2) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 89
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.CreateJavascriptCode(String fileName, Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 107
+   在 WebUI.CodeGenerator.JavaScriptCodeGenerator.GenerateCode(Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\JavaScriptCodeGenerator.cs:行号 24
+   在 WebUI.CodeGenerator.HTMLCodeGenerator.GenerateCode(Object param) 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\CodeGenerator\HTMLCodeGenerator.cs:行号 27
+   在 WebUI.Controllers.HomeController.GeneratorCode() 位置 D:\源码\EHECDTemplateCreator\EHECDTemplateCreator\WebUI\Controllers\HomeController.cs:行号 32
+   在 lambda_method(Closure , ControllerBase , Object[] )
+   在 System.Web.Mvc.ActionMethodDispatcher.<>c__DisplayClass1.<WrapVoidAction>b__0(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ActionMethodDispatcher.Execute(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<BeginInvokeSynchronousActionMethod>b__39(IAsyncResult asyncResult, ActionInvocation innerInvokeState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`2.CallEndDelegate(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3d()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass46.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3f()

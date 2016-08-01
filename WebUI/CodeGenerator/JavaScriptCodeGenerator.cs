@@ -71,7 +71,7 @@ namespace WebUI.CodeGenerator
                                     object datagridDic = "";
                                     if (dirp.TryGetValue("value", out datagridDic))
                                     {
-                                        var functionName = string.Format("initDataGrid${0}();", Guid.NewGuid().ToString().ToLower().Replace("-", ""));
+                                        var functionName = string.Format("initDataGrid${0}()", Guid.NewGuid().ToString().ToLower().Replace("-", ""));
                                         //开始初始化datagrid
                                         sb.AppendLine("            /**");
                                         sb.AppendLine("            /*请注意命名规范：");
@@ -80,7 +80,7 @@ namespace WebUI.CodeGenerator
                                         sb.AppendLine("            /*initDataGrid$这段是固定的，后面跟datagrid的名字，你可以");
                                         sb.AppendLine("            /*更改，也可以沿用这个名字以保证一致性");
                                         sb.AppendLine("            */");
-                                        sb.AppendLine(string.Format("            {0}", functionName));
+                                        sb.AppendLine(string.Format("            {0};", functionName));
 
                                         var datagridpro = datagridDic.ToString();
 
@@ -132,7 +132,7 @@ namespace WebUI.CodeGenerator
         }
 
         /// <summary>
-        /// 创建初始化js脚本
+        /// 创建初始化datagrid脚本
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -148,20 +148,90 @@ namespace WebUI.CodeGenerator
                 sb.AppendLine("    /**");
                 sb.AppendLine("    /* 初始化datagrid");
                 sb.AppendLine("    */");
-                sb.AppendLine(string.Format("    {0}(){", functionName));
-                sb.AppendLine("        try{");
-
+                sb.AppendLine("    function {0}{".Replace("{0}", functionName));
+                sb.AppendLine("        try {");
+                sb.AppendLine("            $(\"#请自己设置datagridID\").datagrid({");
+                sb.AppendLine("                singleSelect: true,//默认是单选");
+                sb.AppendLine("                rownumbers: true,//默认是显示行号");
+                sb.AppendLine("                fit: true,//默认填充列表");
+                sb.AppendLine("                fitColumns: true,//默认填充列表列");
+                sb.AppendLine("                idField: \"ID\",//默认是ID字段");
+                sb.AppendLine("                pagination: true,//默认是要分页");
+                sb.AppendLine("                columns: [[");
                 var cols = ParameterLoader.ConvertJsonToData<Dictionary<string, object>[]>(colunms.ToString());
 
                 for (int i = 0; i < cols.Length; i++)
                 {
+                    sb.AppendLine("                    {" + string.Format(" field: \"{0}\",halign: \"{1}\" ,align: \"{1}\", title: \"{2}\", width: {3}{4}",
+                                                        cols[i]["field"].ToString(),
+                                                        cols[i]["align"].ToString(),
+                                                        cols[i]["columnName"].ToString(),
+                                                        cols[i]["width"].ToString(),
+                                                        cols[i]["formatter"].ToString() == "" ? "" : ",formatter: function(value,row,index){ return " + cols[i]["formatter"].ToString() + " }"
+                                                        ) + "}");
+                    if (i < cols.Length - 1)
+                    {
+                        sb.Append(",");
+                    }
+                }
+                sb.AppendLine("                ]]");
+                sb.AppendLine("                });");
+                sb.AppendLine("");
 
+                object opbtns = "";
+                var btninitfunName = "";
+                if (gridops.TryGetValue("opbtns", out opbtns))
+                {
+                    btninitfunName = string.Format("initDatagridBtn${0}()", Guid.NewGuid().ToString().ToLower().Replace("-", ""));
+                    sb.AppendLine("            " + btninitfunName + ";");
+                    sb.AppendLine("        } catch (e) {");
+                    sb.AppendLine("        }");
+                    sb.AppendLine("    }");
+                    sb.AppendLine("");
+                }
+                else
+                {
+                    sb.AppendLine("        } catch (e) {");
+                    sb.AppendLine("        }");
+                    sb.AppendLine("    }");
+                    sb.AppendLine("");
                 }
 
-                sb.AppendLine("        } catch (e) {");
-                sb.AppendLine("        }");
+                sb.Append(CreateDatagridBtnFunctionScript(btninitfunName, opbtns.ToString()));
             }
 
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 创建操作按钮的初始化方法
+        /// </summary>
+        /// <param name="funcName"></param>
+        /// <param name="opbtns"></param>
+        /// <returns></returns>
+        private string CreateDatagridBtnFunctionScript(string funcName, string opbtns)
+        {
+            if (funcName == "") return funcName;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("    /**");
+            sb.AppendLine("    /* 初始化datagrid的操作按钮");
+            sb.AppendLine("    */");
+            sb.AppendLine("    function {0}{".Replace("{0}", funcName));
+            sb.AppendLine("        try{");
+
+            var btns = ParameterLoader.ConvertJsonToData<Dictionary<string, object>[]>(opbtns.ToString());
+
+            for (int i = 0; i < btns.Length; i++)
+            {
+                sb.AppendLine("            $(\".{0}\").on(\"click\",function(){".Replace("{0}", btns[i]["operateField"].ToString()));
+                sb.AppendLine("                 alert('这里是你的实际要绑定的js操作');");
+                sb.AppendLine("            });");
+                sb.AppendLine("");
+            }
+            sb.AppendLine("        } catch (e) {");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }");
+            sb.AppendLine("");
             return sb.ToString();
         }
     }
