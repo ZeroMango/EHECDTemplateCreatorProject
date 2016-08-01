@@ -10,6 +10,8 @@ namespace WebUI.CodeGenerator
 {
     public class JavaScriptCodeGenerator : CodeGenerator
     {
+        private List<JSJob> joblist = new List<JSJob>();
+
         public override void GenerateCode(object param)
         {
             Next(new ControllerCodeGenerator());
@@ -56,6 +58,7 @@ namespace WebUI.CodeGenerator
                         sb.AppendLine("    function initModule(){");
                         sb.AppendLine("        try{");
 
+                        #region 创建初始化脚本
                         foreach (var item in p)
                         {
                             var dirp = ParameterLoader.ConvertJsonToData<Dictionary<string, object>>(item.ToString());
@@ -68,16 +71,42 @@ namespace WebUI.CodeGenerator
                                     object datagridDic = "";
                                     if (dirp.TryGetValue("value", out datagridDic))
                                     {
-                                        //sb.Append(CreateDataGrid(datagridDic.ToString()));
+                                        var functionName = string.Format("initDataGrid${0}();", Guid.NewGuid().ToString().ToLower().Replace("-", ""));
+                                        //开始初始化datagrid
+                                        sb.AppendLine("            /**");
+                                        sb.AppendLine("            /*请注意命名规范：");
+                                        sb.AppendLine("            /*初始化datagrid的方法名字是按照如下规范生成的");
+                                        sb.AppendLine("            /*【initDataGrid$这个是datagrid的名字()这里是生成的guid】");
+                                        sb.AppendLine("            /*initDataGrid$这段是固定的，后面跟datagrid的名字，你可以");
+                                        sb.AppendLine("            /*更改，也可以沿用这个名字以保证一致性");
+                                        sb.AppendLine("            */");
+                                        sb.AppendLine(string.Format("            {0}", functionName));
+
+                                        var datagridpro = datagridDic.ToString();
+
+                                        joblist.Add(new JSJob
+                                        {
+                                            func = (s1, s2) => { return CreateDatagridCode(s1, s2); },
+                                            param1 = datagridpro,
+                                            param2 = functionName
+                                        });
                                     }
                                 }
                             }
                         }
+                        #endregion
 
                         sb.AppendLine("        }catch (e){");
                         sb.AppendLine("            //这里请自行处理异常");
                         sb.AppendLine("        }");
                         sb.AppendLine("    }");
+                        sb.AppendLine("");
+
+                        for (int i = 0; i < joblist.Count; i++)
+                        {
+                            sb.Append(joblist[i].func.Invoke(joblist[i].param1, joblist[i].param2));
+                        }
+
                         sb.AppendLine("");
                         sb.AppendLine("    return{");
                         sb.AppendLine("        initModule:initModule");
@@ -101,5 +130,46 @@ namespace WebUI.CodeGenerator
                 throw new ApplicationException("没有找到路径" + Path);
             }
         }
+
+        /// <summary>
+        /// 创建初始化js脚本
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        private string CreateDatagridCode(string v, string functionName)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var gridops = ParameterLoader.ConvertJsonToData<Dictionary<string, object>>(v);
+
+            object colunms = "";
+            if (gridops.TryGetValue("columns", out colunms))
+            {
+                sb.AppendLine("    /**");
+                sb.AppendLine("    /* 初始化datagrid");
+                sb.AppendLine("    */");
+                sb.AppendLine(string.Format("    {0}(){", functionName));
+                sb.AppendLine("        try{");
+
+                var cols = ParameterLoader.ConvertJsonToData<Dictionary<string, object>[]>(colunms.ToString());
+
+                for (int i = 0; i < cols.Length; i++)
+                {
+
+                }
+
+                sb.AppendLine("        } catch (e) {");
+                sb.AppendLine("        }");
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    internal class JSJob
+    {
+        public Func<string, string, string> func { get; set; }
+        public string param1 { get; set; }
+        public string param2 { get; set; }
     }
 }
