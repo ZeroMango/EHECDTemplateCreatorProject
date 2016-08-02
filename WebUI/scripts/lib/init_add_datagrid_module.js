@@ -59,7 +59,7 @@ function AddDatagridControl() {
             ]], fitColumns: true,
             onDblClickRow: function (index, row) {
                 //双击行开始编辑
-                $(this).datagrid("beginEdit", index);
+                $('#dt_dtgd').datagrid("beginEdit", index);
             }
         });
 
@@ -133,9 +133,9 @@ function AddDatagridControl() {
                 { field: 'options', halign: "left", align: "left", title: '属性', width: 180 }
             ]], fitColumns: true,
             onDblClickRow: function (index, row) {
-                $(this).datagrid("updateRow", { index: index, row: { options: "" } });
+                $('#dt_dttlgd').datagrid("updateRow", { index: index, row: { options: "" } });
                 //双击行开始编辑
-                $(this).datagrid("beginEdit", index);
+                $('#dt_dttlgd').datagrid("beginEdit", index);
             }
         });
 
@@ -162,7 +162,7 @@ function AddDatagridControl() {
             singleSelect: true,
             rownumbers: true,
             width: width - 13,
-            height: height / 2 - 50,
+            height: height / 2 - 50,            
             columns: [[                
                 { field: 'operateField', halign: "center", title: '标识符', width: 100, editor: { type: "textbox", options: { required: true } } },
                 { field: 'operateText', halign: "center", title: '按钮文本', width: 100, editor: { type: "textbox", options: { required: true } } },
@@ -220,7 +220,7 @@ function AddDatagridControl() {
             ]], fitColumns: true,
             onDblClickRow: function (index, row) {
                 //双击行开始编辑
-                $(this).datagrid("beginEdit", index);
+                $('#dt_dttlgd2').datagrid("beginEdit", index);
             }
         });
 
