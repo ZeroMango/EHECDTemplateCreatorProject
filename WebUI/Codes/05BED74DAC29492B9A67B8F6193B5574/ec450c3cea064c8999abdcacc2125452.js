@@ -23,7 +23,7 @@ function 操作模块(){
             /*initDataGrid$这段是固定的，后面跟datagrid的名字，你可以
             /*更改，也可以沿用这个名字以保证一致性
             */
-            initDataGrid$a71c9c7288f245b582f2adb547d56cb5();
+            initDataGrid$1cc8eac6038f48eeb81fcdb68e6d1c04();
         }catch (e){
             //这里请自行处理异常
         }
@@ -32,9 +32,11 @@ function 操作模块(){
     /**
     /* 初始化datagrid
     */
-    function initDataGrid$a71c9c7288f245b582f2adb547d56cb5(){
+    function initDataGrid$1cc8eac6038f48eeb81fcdb68e6d1c04(){
         try {
             $("#请自己设置datagridID").datagrid({
+                //指定datagrid工具栏操作
+                toolbar:"#请输入工具栏的ID",
                 //默认是单选
                 singleSelect: true,
                 //默认是显示行号
@@ -58,13 +60,12 @@ function 操作模块(){
                     { field: "字段名", halign: "left", align: "left", title: "columnName", width: 100 },
                     { field: "字段名", halign: "left", align: "left", title: "columnName", width: 100 },
                     { field: "字段名", halign: "left", align: "left", title: "columnName", width: 100 },
-                    { field: "字段名", halign: "left", align: "left", title: "columnName", width: 100 },
                     { field: "字段名", halign: "left", align: "left", title: "columnName", width: 100 }
                 ]]
             });
 
             //初始化datagrid操作的按钮点击事件
-            initDatagridBtn$511bc9b99a0c4fc9bb3258fe124a12b6();
+            initDatagridBtn$ebaea38488b64d9886e5d5846159ae50();
 
         } catch (e) {
         }
@@ -73,8 +74,76 @@ function 操作模块(){
     /**
     /* 初始化datagrid的操作按钮
     */
-    function initDatagridBtn$511bc9b99a0c4fc9bb3258fe124a12b6(){
+    function initDatagridBtn$ebaea38488b64d9886e5d5846159ae50(){
         try{
+            $(".search").on("click",function(){
+                 //执行查询操作
+                 excuteFunc$search();
+            });
+
+            $(".edit").on("click",function(){
+                 //执行编辑操作
+                 excuteFunc$edit();
+            });
+
+            $(".delete").on("click",function(){
+                 //执行删除操作
+                 excuteFunc$delete();
+            });
+
+            $(".detail").on("click",function(){
+                 //执行详情操作
+                 excuteFunc$detail();
+            });
+
+        } catch (e) {
+        }
+    }
+
+    /**
+    /* 执行查询操作
+    */
+    function excuteFunc$search(){
+        try{
+        
+        //请在这里实现你的操作方法
+        
+        } catch (e) {
+        }
+    }
+
+    /**
+    /* 执行编辑操作
+    */
+    function excuteFunc$edit(){
+        try{
+        
+        //请在这里实现你的操作方法
+        
+        } catch (e) {
+        }
+    }
+
+    /**
+    /* 执行删除操作
+    */
+    function excuteFunc$delete(){
+        try{
+        
+        //请在这里实现你的操作方法
+        
+        } catch (e) {
+        }
+    }
+
+    /**
+    /* 执行详情操作
+    */
+    function excuteFunc$detail(){
+        try{
+        
+        //请在这里实现你的操作方法
+        
         } catch (e) {
         }
     }

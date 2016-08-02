@@ -166,11 +166,14 @@ namespace WebUI.CodeGenerator
             sb.AppendLine("    function {0}{".Replace("{0}", functionName));
             sb.AppendLine("        try {");
             sb.AppendLine("            $(\"#请自己设置datagridID\").datagrid({");
+
+            //如果有查询条件或者是操作按钮就生成toolbar
             if (condis.Length > 0 || btns.Length > 0)
             {
                 sb.AppendLine("                //指定datagrid工具栏操作");
-                sb.AppendLine("                toolbar:\"请输入工具栏的ID\",");
+                sb.AppendLine("                toolbar:\"#请输入工具栏的ID\",");
             }
+
             sb.AppendLine("                //默认是单选");
             sb.AppendLine("                singleSelect: true,");
             sb.AppendLine("                //默认是显示行号");
@@ -191,7 +194,7 @@ namespace WebUI.CodeGenerator
             sb.AppendLine("                columns: [[");
             sb.AppendLine("                    //是否显示checkbox，这个根据需要设置，默认不显示");
             sb.AppendLine("                    //{ field: 'checkbox', checkbox: true },");
-            
+
             for (int i = 0; i < cols.Length; i++)
             {
                 var columnStr = string.Format(" field: \"{0}\", halign: \"{1}\", align: \"{1}\", title: \"{2}\", width: {3}{4} ",
@@ -229,7 +232,7 @@ namespace WebUI.CodeGenerator
             }
 
             sb.Append(CreateDatagridBtnFunctionScript(btninitfunName, opbtns.ToString()));
-            
+
             return sb.ToString();
         }
 
@@ -250,12 +253,17 @@ namespace WebUI.CodeGenerator
             sb.AppendLine("        try{");
 
             var btns = ParameterLoader.ConvertJsonToData<Dictionary<string, object>[]>(opbtns.ToString());
-            string[] doFunctions = new string[btns.Length]; 
+            Dictionary<string,string> doFunctions = new Dictionary<string, string>();
 
             for (int i = 0; i < btns.Length; i++)
             {
+                //点击事件触发的方法名称
+                var excuteFucName = "excuteFunc$" + btns[i]["operateField"].ToString();
+                //键是方法名称，值是对应的操作说明，值用来生成注释
+                doFunctions.Add(excuteFucName, btns[i]["operateText"].ToString());
                 sb.AppendLine("            $(\".{0}\").on(\"click\",function(){".Replace("{0}", btns[i]["operateField"].ToString()));
-                sb.AppendLine("                 alert('这里是你的实际要绑定的js操作');");
+                sb.AppendLine(string.Format("                 //执行{0}操作", btns[i]["operateText"].ToString()));
+                sb.AppendLine(string.Format("                 {0}();", excuteFucName));
                 sb.AppendLine("            });");
                 sb.AppendLine("");
             }
@@ -263,6 +271,27 @@ namespace WebUI.CodeGenerator
             sb.AppendLine("        }");
             sb.AppendLine("    }");
             sb.AppendLine("");
+            
+            if(doFunctions.Count > 0)
+            {
+                var en = doFunctions.GetEnumerator(); 
+                while (en.MoveNext())
+                {
+                    sb.AppendLine("    /**");
+                    sb.AppendLine(string.Format("    /* 执行{0}操作",en.Current.Value));
+                    sb.AppendLine("    */");
+                    sb.AppendLine("    function {0}(){".Replace("{0}", en.Current.Key));
+                    sb.AppendLine("        try{");
+                    sb.AppendLine("        ");
+                    sb.AppendLine("        //请在这里实现你的操作方法");
+                    sb.AppendLine("        ");
+                    sb.AppendLine("        } catch (e) {");
+                    sb.AppendLine("        }");
+                    sb.AppendLine("    }");
+                    sb.AppendLine("");
+                }
+            }
+
             return sb.ToString();
         }
     }
