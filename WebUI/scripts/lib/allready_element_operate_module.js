@@ -14,7 +14,7 @@
                 fitColumns: true,
                 lines: true,
                 toolbar: [' ', ' ', ' ', ' ', ' ', ' ', '-', {
-                    iconCls: 'icon-save',
+                    iconCls: 'icon-save', 
                     handler: function () {
                         var pool = generatorCachePool.getPool();
                         if (pool.length > 0) {
